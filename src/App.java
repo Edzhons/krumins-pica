@@ -70,7 +70,11 @@ public class App {
 
     static void izveidotPasutijumu(){
         String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
-            String veids = (String) JOptionPane.showInputDialog(
+        String veids = null;
+        String izmers;
+        int opcija;
+        do{
+            veids = (String) JOptionPane.showInputDialog(
                 null,
                 "Izvēlies picas veidu:",
                 "Cepam picu...",
@@ -78,9 +82,11 @@ public class App {
                 null,
                 darbibas,
                 darbibas[0]);
-            
+        }while(veids == null);
+
+        do{
             darbibas = new String[]{"Liela", "Vidēja", "Maza"};
-            String izmers = (String) JOptionPane.showInputDialog(
+            izmers = (String) JOptionPane.showInputDialog(
                 null,
                 "Izvēlies picas izmēru:",
                 "Cepam picu...",
@@ -88,6 +94,7 @@ public class App {
                 null,
                 darbibas,
                 darbibas[0]);
+        }while(izmers == null);
 
             JCheckBox siers = new JCheckBox("Siers");
             JCheckBox pepperoni = new JCheckBox("Pepperoni");
@@ -102,7 +109,7 @@ public class App {
                 olivas
             };
 
-            int opcija = JOptionPane.showConfirmDialog(null, message, "Piedevas", JOptionPane.OK_CANCEL_OPTION);
+            opcija = JOptionPane.showConfirmDialog(null, message, "Piedevas", JOptionPane.OK_CANCEL_OPTION);
             if (opcija == JOptionPane.OK_OPTION) {
                 if (siers.isSelected()) piedevas.add("Siers");
                 if (pepperoni.isSelected()) piedevas.add("Pepperoni");
