@@ -1,6 +1,8 @@
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,37 +16,38 @@ class Pica {
     private List<String> piedevas;
     private List<String> merces;
     private double cena;
+    private String parole;
 
-    public Pica(String veids, String izmers, List<String> piedevas, List<String> merces, double cena) {
+    public Pica(String veids, String izmers, List<String> piedevas, List<String> merces, double cena, String parole) {
         this.veids = veids;
         this.izmers = izmers;
         this.piedevas = piedevas;
         this.merces = merces;
         this.cena = cena;
+        this.parole = parole;
     }
 
-    public void izvaditPasutijumu() {
-        System.out.println("Picas veids: " + veids);
-        System.out.println("Izmērs: " + izmers);
-        System.out.print("Extra piedevas: ");
-        for (String piedeva : piedevas) {
-            System.out.print(piedeva + " ");
-        }
-        System.out.print("\nMērces: ");
-        for (String merce : merces) {
-            System.out.print(merce + " ");
-        }
-
-        System.out.println("\n\nCena: " + cena + " EUR");
+    public String toFileString() { // PAREIZS FORMATS, LAI IERAKSTITU FAILAA (Pica objekts uz String)
+        return veids + ";" + izmers + ";" + String.join(",", piedevas) + ";" + String.join(",", merces) + ";" + cena + ";" + parole;
     }
+
+    public static Pica fromFileString(String data) { // PAREIZS FORMATS, LAI NOLASITU NO FAILA (String uz Pica objektu)
+        String[] parts = data.split(";");
+
+        String veids = parts[0];
+        String izmers = parts[1];
+        List<String> piedevas = parts[2].isEmpty() ? new ArrayList<>() : Arrays.asList(parts[2].split(","));
+        List<String> merces = parts[3].isEmpty() ? new ArrayList<>() : Arrays.asList(parts[3].split(","));
+        double cena = Double.parseDouble(parts[4]);
+        String parole = parts[5];
+
+        return new Pica(veids, izmers, piedevas, merces, cena, parole);
+    }
+
     @Override
     public String toString() {
-        return String.format("%s (%s) - %.2f EUR\nPiedevas: %s\nMērces: %s",
-            veids, izmers, cena,
-            piedevas.isEmpty() ? "Nav" : String.join(", ", piedevas),
-            merces.isEmpty() ? "Nav" : String.join(", ", merces)
-        );
-}
+        return veids + " (" + izmers + ") - " + cena + " EUR";
+    }
 }
 
 public class App {
@@ -74,18 +77,51 @@ public class App {
             switch(izvelesIndekss){
                 case 0:
                     izveidotPasutijumu();
+                    saglabaPasutijumus(picasPasutijumi);
                     break;
                 case 1:
+                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
                     apskatitPasutijumus();
                     break;
                 case 2:
+                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
                     sanemtPasutijumu();
+                    saglabaPasutijumus(picasPasutijumi);
                     break;
             }
         
         }while(izvelesIndekss != 3);
     }
 
+    public static void saglabaPasutijumus(List<Pica> picasPasutijumi) {
+        String fNosaukums = "pasutijumi.txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fNosaukums, false))) {
+            for (Pica pica : picasPasutijumi) {
+                writer.write(pica.toFileString()); // Konvertē Pica objektu uz String
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving orders: " + e.getMessage());
+        }
+    }
+
+    public static List<Pica> nolasaPasutijumus() {
+        String fNosaukums = "pasutijumi.txt";
+        List<Pica> picasPasutijumi = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fNosaukums))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                picasPasutijumi.add(Pica.fromFileString(line)); // Konvertē String atpakaļ uz Pica objektu
+            }
+        } catch (IOException e) {
+            System.out.println("No existing orders found, starting fresh.");
+        }
+
+        return picasPasutijumi;
+    }
+    
     static void izveidotPasutijumu(){
         String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
         String veids = null;
@@ -164,23 +200,7 @@ public class App {
                 parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
             }while(parole == null || parole.length() < 5);
 
-        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99));
-            for (Pica pica : picasPasutijumi) {
-                pica.izvaditPasutijumu();
-            }
-
-            String fNosaukums = "pasutijumuParoles";
-            Pica pedejaPica = picasPasutijumi.get(picasPasutijumi.size() - 1);
-            String teksts = pedejaPica + " - " + parole;
-        try{
-			FileWriter fw = new FileWriter(new File(fNosaukums+".txt"), true);
-			PrintWriter pw = new PrintWriter(fw);
-			pw.println(teksts);
-			pw.close();
-			JOptionPane.showMessageDialog(null, "Pasūtījums saglabāts failā "+fNosaukums);
-		}catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Kļūme ierakstot failā!", "Kļūme!", JOptionPane.WARNING_MESSAGE);
-		}
+        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99, parole));
     }
 
     static void apskatitPasutijumus(){
@@ -242,7 +262,7 @@ public class App {
             int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
 
             if (indekss != -1) {
-                picasPasutijumi.remove(indekss); // Remove from list
+                picasPasutijumi.remove(indekss);
                 JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi izņemts, labu apetīti! ;]");
             }
         }else{
