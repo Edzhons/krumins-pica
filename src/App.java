@@ -50,7 +50,7 @@ public class App {
         static List<String> merces = new ArrayList<>();
     public static void main(String[] args) throws Exception {
 
-        String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Izņemt pasūtījumu", "Iziet"};
+        String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu", "Iziet"};
         int izvelesIndekss = 0;
         do{
             String izvele = (String) JOptionPane.showInputDialog(
@@ -74,6 +74,9 @@ public class App {
                     break;
                 case 1:
                     apskatitPasutijumus();
+                    break;
+                case 2:
+                    sanemtPasutijumu();
                     break;
             }
         
@@ -174,14 +177,56 @@ public class App {
         String pasutijums;
         pasutijums = (String) JOptionPane.showInputDialog(
             null,
-            "Izvēlies attiecīgo pasūtījumu: ",
+            "Izvēlies pasūtījumu, ko apskatīt: ",
             "Pasūtījumu saraksts",
             JOptionPane.QUESTION_MESSAGE,
             null,
             pasutijumiStr,
             pasutijumiStr[0]);
 
+        if (pasutijums == null) {
+            return;
+        }
+
         JOptionPane.showMessageDialog(null, pasutijums, "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    static void sanemtPasutijumu(){
+        if (picasPasutijumi.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Convert picasPasutijumi to a String array for selection
+        String[] pasutijumiStr = picasPasutijumi.stream()
+        .map(pica -> pica.toString()) // Convert each Pica to a string
+        .toArray(String[]::new);
+        
+        int opcija;
+        String pasutijums;
+        pasutijums = (String) JOptionPane.showInputDialog(
+            null,
+            "Izvēlies pasūtījumu, ko saņemt: ",
+            "Pasūtījumu saraksts",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            pasutijumiStr,
+            pasutijumiStr[0]);
+
+        if (pasutijums == null) {
+                return;
+        }
+
+        opcija = JOptionPane.showConfirmDialog(null, pasutijums+"\nVai Vēlies saņemt šo pasūtījumu?", "Pasūtījuma informācija", JOptionPane.OK_CANCEL_OPTION);
+        if (opcija == JOptionPane.OK_OPTION) {
+            int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
+
+            if (indekss != -1) {
+                picasPasutijumi.remove(indekss); // Remove from list
+                JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi izņemts, labu apetīti! ;]");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Pasūtījums netika izņemts!");
+        }
+    }
 }
