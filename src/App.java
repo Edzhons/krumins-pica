@@ -34,6 +34,14 @@ class Pica {
 
         System.out.println("\n\nCena: " + cena + " EUR");
     }
+    @Override
+    public String toString() {
+        return String.format("%s (%s) - %.2f EUR\nPiedevas: %s\nMērces: %s",
+            veids, izmers, cena,
+            piedevas.isEmpty() ? "Nav" : String.join(", ", piedevas),
+            merces.isEmpty() ? "Nav" : String.join(", ", merces)
+        );
+}
 }
 
 public class App {
@@ -62,7 +70,11 @@ public class App {
 
             switch(izvelesIndekss){
                 case 0:
-                izveidotPasutijumu();
+                    izveidotPasutijumu();
+                    break;
+                case 1:
+                    apskatitPasutijumus();
+                    break;
             }
         
         }while(izvelesIndekss != 3);
@@ -144,5 +156,28 @@ public class App {
             }
     }
 
+    static void apskatitPasutijumus(){
+        if (picasPasutijumi.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Convert picasPasutijumi to a String array for selection
+        String[] pasutijumiStr = picasPasutijumi.stream()
+        .map(pica -> pica.toString()) // Convert each Pica to a string
+        .toArray(String[]::new);
+        
+        String pasutijums;
+        pasutijums = (String) JOptionPane.showInputDialog(
+            null,
+            "Izvēlies attiecīgo pasūtījumu: ",
+            "Pasūtījumu saraksts",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            pasutijumiStr,
+            pasutijumiStr[0]);
+
+        JOptionPane.showMessageDialog(null, pasutijums, "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
+    }
 
 }
