@@ -20,7 +20,7 @@ class Pica {
         this.cena = cena;
     }
 
-    public void izvaditPasutijumus() {
+    public void izvaditPasutijumu() {
         System.out.println("Picas veids: " + veids);
         System.out.println("Izmērs: " + izmers);
         System.out.print("Extra piedevas: ");
@@ -85,6 +85,10 @@ public class App {
         String veids = null;
         String izmers;
         int opcija;
+
+        piedevas.clear();
+        merces.clear();
+
         do{
             veids = (String) JOptionPane.showInputDialog(
                 null,
@@ -150,9 +154,9 @@ public class App {
                 if (ipasaMerce.isSelected()) merces.add("Pavāra īpašā mērce");
             }
 
-            picasPasutijumi.add(new Pica(veids, izmers, piedevas, merces, 14.99));
+            picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99));
             for (Pica pica : picasPasutijumi) {
-                pica.izvaditPasutijumus();
+                pica.izvaditPasutijumu();
             }
     }
 
