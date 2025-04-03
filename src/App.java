@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -86,7 +89,7 @@ public class App {
     static void izveidotPasutijumu(){
         String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
         String veids = null;
-        String izmers;
+        String izmers, parole;
         int opcija;
 
         piedevas.clear();
@@ -156,11 +159,28 @@ public class App {
                 if (asaMerce.isSelected()) merces.add("Asā mērce");
                 if (ipasaMerce.isSelected()) merces.add("Pavāra īpašā mērce");
             }
+            
+            do{
+                parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
+            }while(parole == null || parole.length() < 5);
 
-            picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99));
+        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99));
             for (Pica pica : picasPasutijumi) {
                 pica.izvaditPasutijumu();
             }
+
+            String fNosaukums = "pasutijumuParoles";
+            Pica pedejaPica = picasPasutijumi.get(picasPasutijumi.size() - 1);
+            String teksts = pedejaPica + " - " + parole;
+        try{
+			FileWriter fw = new FileWriter(new File(fNosaukums+".txt"), true);
+			PrintWriter pw = new PrintWriter(fw);
+			pw.println(teksts);
+			pw.close();
+			JOptionPane.showMessageDialog(null, "Pasūtījums saglabāts failā "+fNosaukums);
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Kļūme ierakstot failā!", "Kļūme!", JOptionPane.WARNING_MESSAGE);
+		}
     }
 
     static void apskatitPasutijumus(){
