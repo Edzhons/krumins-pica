@@ -9,10 +9,10 @@ class Pica {
     private String veids;
     private String izmers;
     private List<String> piedevas;
-    private String[] merces;
+    private List<String> merces;
     private double cena;
 
-    public Pica(String veids, String izmers, List<String> piedevas, String[] merces, double cena) {
+    public Pica(String veids, String izmers, List<String> piedevas, List<String> merces, double cena) {
         this.veids = veids;
         this.izmers = izmers;
         this.piedevas = piedevas;
@@ -27,23 +27,49 @@ class Pica {
         for (String piedeva : piedevas) {
             System.out.print(piedeva + " ");
         }
-        System.out.println("Mērces: ");
+        System.out.print("\nMērces: ");
         for (String merce : merces) {
             System.out.print(merce + " ");
         }
 
-        System.out.println("\nCena: " + cena + " EUR\n");
+        System.out.println("\n\nCena: " + cena + " EUR");
     }
 }
 
 public class App {
+        static List<Pica> picasPasutijumi = new ArrayList<>();
+        static List<String> piedevas = new ArrayList<>();
+        static List<String> merces = new ArrayList<>();
     public static void main(String[] args) throws Exception {
 
-        List<Pica> picasPasutijumi = new ArrayList<>();
-        String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
-        List<String> piedevas = new ArrayList<>();
+        String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Izņemt pasūtījumu", "Iziet"};
         int izvelesIndekss = 0;
         do{
+            String izvele = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies darbību",
+                "Sveicināts picērijā!",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                darbibas,
+                darbibas[0]
+            );
+            izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
+            if (izvele == null) {
+                JOptionPane.showMessageDialog(null, "Programma apturēta.");
+                break;
+            }
+
+            switch(izvelesIndekss){
+                case 0:
+                izveidotPasutijumu();
+            }
+        
+        }while(izvelesIndekss != 3);
+    }
+
+    static void izveidotPasutijumu(){
+        String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
             String veids = (String) JOptionPane.showInputDialog(
                 null,
                 "Izvēlies picas veidu:",
@@ -51,13 +77,7 @@ public class App {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 darbibas,
-                darbibas[0]
-            );
-            izvelesIndekss = Arrays.asList(darbibas).indexOf(veids);
-            if (veids == null) {
-                JOptionPane.showMessageDialog(null, "Programma apturēta.");
-                break;
-            }
+                darbibas[0]);
             
             darbibas = new String[]{"Liela", "Vidēja", "Maza"};
             String izmers = (String) JOptionPane.showInputDialog(
@@ -67,15 +87,8 @@ public class App {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 darbibas,
-                darbibas[0]
-            );
-            izvelesIndekss = Arrays.asList(darbibas).indexOf(izmers);
-            if (izmers == null) {
-                JOptionPane.showMessageDialog(null, "Programma apturēta.");
-                break;
-            }
+                darbibas[0]);
 
-            darbibas = new String[]{"Siers", "Pepperoni"};
             JCheckBox siers = new JCheckBox("Siers");
             JCheckBox pepperoni = new JCheckBox("Pepperoni");
             JCheckBox senes = new JCheckBox("Sēnes");
@@ -89,21 +102,40 @@ public class App {
                 olivas
             };
 
-            int izvele = JOptionPane.showConfirmDialog(null, message, "Piedevas", JOptionPane.OK_CANCEL_OPTION);
-            if (izvele == JOptionPane.OK_OPTION) {
+            int opcija = JOptionPane.showConfirmDialog(null, message, "Piedevas", JOptionPane.OK_CANCEL_OPTION);
+            if (opcija == JOptionPane.OK_OPTION) {
                 if (siers.isSelected()) piedevas.add("Siers");
                 if (pepperoni.isSelected()) piedevas.add("Pepperoni");
                 if (senes.isSelected()) piedevas.add("Sēnes");
                 if (olivas.isSelected()) piedevas.add("Olīvas");
-            }else{
-                
             }
 
-            picasPasutijumi.add(new Pica(veids, izmers, piedevas, new String[]{"Majonēze", "Kečups"}, 14.99));
+            JCheckBox kecups = new JCheckBox("Kečups");
+            JCheckBox majoneze = new JCheckBox("Majonēze");
+            JCheckBox asaMerce = new JCheckBox("Asā mērce");
+            JCheckBox ipasaMerce = new JCheckBox("Pavāra īpašā mērce");
+
+            message = new Object[] {
+                "Izvēlies piedevas:",
+                kecups,
+                majoneze,
+                asaMerce,
+                ipasaMerce
+            };
+
+            opcija = JOptionPane.showConfirmDialog(null, message, "Mērces", JOptionPane.OK_CANCEL_OPTION);
+            if (opcija == JOptionPane.OK_OPTION) {
+                if (kecups.isSelected()) merces.add("Kečups");
+                if (majoneze.isSelected()) merces.add("Majonēze");
+                if (asaMerce.isSelected()) merces.add("Asā mērce");
+                if (ipasaMerce.isSelected()) merces.add("Pavāra īpašā mērce");
+            }
+
+            picasPasutijumi.add(new Pica(veids, izmers, piedevas, merces, 14.99));
             for (Pica pica : picasPasutijumi) {
                 pica.izvaditPasutijumus();
             }
-        
-        }while(izvelesIndekss != 3);
     }
+
+
 }
