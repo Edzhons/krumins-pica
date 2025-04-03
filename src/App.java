@@ -95,6 +95,8 @@ public class App {
                 if (pepperoni.isSelected()) piedevas.add("Pepperoni");
                 if (senes.isSelected()) piedevas.add("Sēnes");
                 if (olivas.isSelected()) piedevas.add("Olīvas");
+            }else{
+                
             }
 
             picasPasutijumi.add(new Pica(veids, izmers, piedevas, new String[]{"Majonēze", "Kečups"}, 14.99));
