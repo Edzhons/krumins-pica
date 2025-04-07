@@ -16,23 +16,26 @@ class Pica {
     private List<String> piedevas;
     private List<String> merces;
     private double cena;
+    private Boolean piegade;
+    private String adrese;
+    private String telNr;
     private String parole;
 
-    public Pica(String veids, String izmers, List<String> piedevas, List<String> merces, double cena, String parole) {
+    public Pica(String veids, String izmers, List<String> piedevas, List<String> merces, double cena, Boolean piegade, String adrese, String telNr, String parole) {
         this.veids = veids;
         this.izmers = izmers;
         this.piedevas = piedevas;
         this.merces = merces;
         this.cena = cena;
+        this.piegade = piegade;
+        this.adrese = adrese;
+        this.telNr = telNr;
         this.parole = parole;
     }
 
-    public String getParole() {
-        return parole;
-    }    
-
     public String toFileString() { // PAREIZS FORMATS, LAI IERAKSTITU FAILAA (Pica objekts uz String)
-        return veids + ";" + izmers + ";" + String.join(",", piedevas) + ";" + String.join(",", merces) + ";" + cena + ";" + parole;
+        return veids + ";" + izmers + ";" + String.join(",", piedevas) + ";" + String.join(",", merces) + ";" + cena + ";" +
+        piegade + ";" + adrese + ";" + telNr + ";" + parole;
     }
 
     public static Pica fromFileString(String data) { // PAREIZS FORMATS, LAI NOLASITU NO FAILA (String uz Pica objektu)
@@ -43,9 +46,32 @@ class Pica {
         List<String> piedevas = parts[2].isEmpty() ? new ArrayList<>() : Arrays.asList(parts[2].split(","));
         List<String> merces = parts[3].isEmpty() ? new ArrayList<>() : Arrays.asList(parts[3].split(","));
         double cena = Double.parseDouble(parts[4]);
-        String parole = parts[5];
+        Boolean piegade = Boolean.parseBoolean(parts[5]);
+        String adrese = parts[6];
+        String telNr = parts[7];
+        String parole = parts[8];
 
-        return new Pica(veids, izmers, piedevas, merces, cena, parole);
+        return new Pica(veids, izmers, piedevas, merces, cena, piegade, adrese, telNr, parole);
+    }
+
+    public String getParole() {
+        return parole;
+    }
+
+    public String getAtributi(){
+        String piegadee = "";
+        if (piegade){
+            piegadee = "\nPiegāde uz adresi: "+adrese+
+                            "\nTel: "+telNr;
+        }
+
+        return "Veids: " + veids +
+        "\nIzmērs: " + izmers +
+        "\nPiedevas: " + String.join(",", piedevas) +
+        "\nMērces: " + String.join(",", merces) +
+        piegadee +
+        "\n\nCena: " + cena +
+        "\n[Parole: " + parole + "]";
     }
 
     @Override
@@ -129,8 +155,9 @@ public class App {
     static void izveidotPasutijumu(){
         String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
         String veids = null;
-        String izmers, parole;
-        int opcija;
+        String izmers, parole, adrese = null, telNr = null;
+        int opcija, piegadeOpcija;
+        Boolean piegade = false;
 
         piedevas.clear();
         merces.clear();
@@ -199,12 +226,25 @@ public class App {
                 if (asaMerce.isSelected()) merces.add("Asā mērce");
                 if (ipasaMerce.isSelected()) merces.add("Pavāra īpašā mērce");
             }
-            
+
+            piegadeOpcija = JOptionPane.showConfirmDialog(
+                null,
+                "Vai vēlies piegādi?",
+                "Piegādes izvēle",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (piegadeOpcija == JOptionPane.YES_OPTION) {
+                piegade = true;
+                adrese = JOptionPane.showInputDialog(null, "Ievadi piegādes adresi:");
+                telNr = JOptionPane.showInputDialog(null, "Ievadi savu telefona numuru:");
+            }
+
             do{
                 parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
             }while(parole == null || parole.length() < 5);
 
-        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99, parole));
+        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99, piegade, adrese, telNr, parole));
     }
 
     static void apskatitPasutijumus(){
@@ -232,7 +272,9 @@ public class App {
             return;
         }
 
-        JOptionPane.showMessageDialog(null, pasutijums, "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
+        int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
+
+        JOptionPane.showMessageDialog(null, picasPasutijumi.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
     }
 
     static void sanemtPasutijumu(){
@@ -241,9 +283,8 @@ public class App {
             return;
         }
 
-        // Convert picasPasutijumi to a String array for selection
         String[] pasutijumiStr = picasPasutijumi.stream()
-        .map(pica -> pica.toString()) // Convert each Pica to a string
+        .map(pica -> pica.toString())
         .toArray(String[]::new);
         
         int opcija;
