@@ -27,6 +27,10 @@ class Pica {
         this.parole = parole;
     }
 
+    public String getParole() {
+        return parole;
+    }    
+
     public String toFileString() { // PAREIZS FORMATS, LAI IERAKSTITU FAILAA (Pica objekts uz String)
         return veids + ";" + izmers + ";" + String.join(",", piedevas) + ";" + String.join(",", merces) + ";" + cena + ";" + parole;
     }
@@ -262,8 +266,13 @@ public class App {
             int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
 
             if (indekss != -1) {
-                picasPasutijumi.remove(indekss);
-                JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi izņemts, labu apetīti! ;]");
+                String parole = JOptionPane.showInputDialog(null, "Ievadi paroli, lai saņemtu šo sūtījumu!");
+                if (parole != null && parole.equals(picasPasutijumi.get(indekss).getParole())) {
+                    picasPasutijumi.remove(indekss);
+                    JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi izņemts, labu apetīti! ;]");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nepareiza parole. Pasūtījums netika izņemts.");
+                }
             }
         }else{
             JOptionPane.showMessageDialog(null, "Pasūtījums netika izņemts!");
