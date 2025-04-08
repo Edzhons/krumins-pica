@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 public class App {
         static List<Pica> picasPasutijumi = new ArrayList<>();
+        static List<Banka> bankas = new ArrayList<>();
         static List<String> piedevas = new ArrayList<>();
         static List<String> merces = new ArrayList<>();
     public static void main(String[] args) throws Exception {
@@ -47,8 +48,23 @@ public class App {
     }
 
     public static void bankasIzvele(){
-
+        if (picasPasutijumi.isEmpty()) {
+            int atbilde = JOptionPane.showConfirmDialog(
+                null,
+                "Sveicināts bankā! Vai vēlies izveidot jaunu kontu?",
+                "Kļūda",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+            
+            if (atbilde == JOptionPane.YES_OPTION) {
+                System.out.println("Jauns konts tiek izveidots...");
+            } else {
+                JOptionPane.showMessageDialog(null, "Nu labi... bet bez konta nevarēsi pirkt picas... ;[");
+                return;
+            }
     }
+}
 
     public static void picerijasIzvele(){
         String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu"};
