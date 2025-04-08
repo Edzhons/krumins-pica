@@ -76,6 +76,7 @@ class Pica {
 
     @Override
     public String toString() {
+        izmers = izmers.substring(0, izmers.length() - 8);
         return veids + " (" + izmers + ") - " + cena + "€";
     }
 }
@@ -163,39 +164,41 @@ public class App {
         piedevas.clear();
         merces.clear();
 
-        do{
-            veids = (String) JOptionPane.showInputDialog(
-                null,
-                "Izvēlies picas veidu:",
-                "Cepam picu...",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                darbibas,
-                darbibas[0]);
-        }while(veids == null);
+        veids = (String) JOptionPane.showInputDialog(
+            null,
+            "Izvēlies picas veidu:",
+            "Cepam picu...",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            darbibas,
+            darbibas[0]);
+        if (veids == null){
+            return;
+        }
 
-        do{
-            darbibas = new String[]{"Liela(+8.40€)", "Vidēja(+6.25€)", "Maza(+5.20€)"};
-            izmers = (String) JOptionPane.showInputDialog(
-                null,
-                "Izvēlies picas izmēru:",
-                "Cepam picu...",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                darbibas,
-                darbibas[0]);
-            switch(izmers){
-                case "Liela(+8.40€)":
-                    cena += 8.40;
-                    break;
-                case "Vidēja(+6.25€)":
-                    cena += 6.25;    
-                    break;
-                case "Maza(+5.20€)":
-                    cena += 5.20;
-                    break;
-            }
-        }while(izmers == null);
+        darbibas = new String[]{"Liela(+8.40€)", "Vidēja(+6.25€)", "Maza(+5.20€)"};
+        izmers = (String) JOptionPane.showInputDialog(
+            null,
+            "Izvēlies picas izmēru:",
+            "Cepam picu...",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            darbibas,
+            darbibas[0]);
+        if (izmers == null){
+            return;
+        }
+        switch(izmers){
+            case "Liela(+8.40€)":
+                cena += 8.40;
+                break;
+            case "Vidēja(+6.25€)":
+                cena += 6.25;    
+                break;
+            case "Maza(+5.20€)":
+                cena += 5.20;
+                break;
+        }
 
             JCheckBox siers = new JCheckBox("Siers(+0.80€)");
             JCheckBox pepperoni = new JCheckBox("Pepperoni(+1.00€)");
@@ -228,6 +231,8 @@ public class App {
                     piedevas.add("Olīvas");
                     cena += 0.60;
                 }
+            }else{
+                return;
             }
             JCheckBox kecups = new JCheckBox("Kečups(+0.30€)");
             JCheckBox majoneze = new JCheckBox("Majonēze(+0.30€)");
@@ -260,6 +265,8 @@ public class App {
                     merces.add("Pavāra īpašā mērce");
                     cena += 0.70;
                 }
+            }else{
+                return;
             }
 
             piegadeOpcija = JOptionPane.showConfirmDialog(
