@@ -70,14 +70,14 @@ class Pica {
         "\nPiedevas: " + String.join(",", piedevas) +
         "\nMērces: " + String.join(",", merces) +
         piegadee +
-        "\n\nCena: " + cena +
+        "\n\nCena: " + String.format("%.2f", cena) +"€"+
         "\n[Parole: " + parole + "]";
     }
 
     @Override
     public String toString() {
         izmers = izmers.substring(0, izmers.length() - 8);
-        return veids + " (" + izmers + ") - " + cena + "€";
+        return veids + " (" + izmers + ") - " + String.format("%.2f", cena) + "€";
     }
 }
 
@@ -345,7 +345,7 @@ public class App {
                 return;
         }
 
-        opcija = JOptionPane.showConfirmDialog(null, pasutijums+"\nVai Vēlies saņemt šo pasūtījumu?", "Pasūtījuma informācija", JOptionPane.OK_CANCEL_OPTION);
+        opcija = JOptionPane.showConfirmDialog(null, pasutijums+"\nVai tiešām vēlies saņemt šo pasūtījumu?", "Pasūtījuma informācija", JOptionPane.OK_CANCEL_OPTION);
         if (opcija == JOptionPane.OK_OPTION) {
             int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
 
