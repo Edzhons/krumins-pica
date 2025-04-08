@@ -39,17 +39,17 @@ class Pica {
     }
 
     public static Pica fromFileString(String data) { // PAREIZS FORMATS, LAI NOLASITU NO FAILA (String uz Pica objektu)
-        String[] parts = data.split(";");
+        String[] dalas = data.split(";");
 
-        String veids = parts[0];
-        String izmers = parts[1];
-        List<String> piedevas = parts[2].isEmpty() ? new ArrayList<>() : Arrays.asList(parts[2].split(","));
-        List<String> merces = parts[3].isEmpty() ? new ArrayList<>() : Arrays.asList(parts[3].split(","));
-        double cena = Double.parseDouble(parts[4]);
-        Boolean piegade = Boolean.parseBoolean(parts[5]);
-        String adrese = parts[6];
-        String telNr = parts[7];
-        String parole = parts[8];
+        String veids = dalas[0];
+        String izmers = dalas[1];
+        List<String> piedevas = dalas[2].isEmpty() ? new ArrayList<>() : Arrays.asList(dalas[2].split(","));
+        List<String> merces = dalas[3].isEmpty() ? new ArrayList<>() : Arrays.asList(dalas[3].split(","));
+        double cena = Double.parseDouble(dalas[4]);
+        Boolean piegade = Boolean.parseBoolean(dalas[5]);
+        String adrese = dalas[6];
+        String telNr = dalas[7];
+        String parole = dalas[8];
 
         return new Pica(veids, izmers, piedevas, merces, cena, piegade, adrese, telNr, parole);
     }
@@ -76,7 +76,7 @@ class Pica {
 
     @Override
     public String toString() {
-        return veids + " (" + izmers + ") - " + cena + " EUR";
+        return veids + " (" + izmers + ") - " + cena + "€";
     }
 }
 
@@ -157,6 +157,7 @@ public class App {
         String veids = null;
         String izmers, parole, adrese = null, telNr = null;
         int opcija, piegadeOpcija;
+        double cena = 0.00;
         Boolean piegade = false;
 
         piedevas.clear();
@@ -174,7 +175,7 @@ public class App {
         }while(veids == null);
 
         do{
-            darbibas = new String[]{"Liela", "Vidēja", "Maza"};
+            darbibas = new String[]{"Liela(+8.40€)", "Vidēja(+6.25€)", "Maza(+5.20€)"};
             izmers = (String) JOptionPane.showInputDialog(
                 null,
                 "Izvēlies picas izmēru:",
@@ -183,12 +184,23 @@ public class App {
                 null,
                 darbibas,
                 darbibas[0]);
+            switch(izmers){
+                case "Liela(+8.40€)":
+                    cena += 8.40;
+                    break;
+                case "Vidēja(+6.25€)":
+                    cena += 6.25;    
+                    break;
+                case "Maza(+5.20€)":
+                    cena += 5.20;
+                    break;
+            }
         }while(izmers == null);
 
-            JCheckBox siers = new JCheckBox("Siers");
-            JCheckBox pepperoni = new JCheckBox("Pepperoni");
-            JCheckBox senes = new JCheckBox("Sēnes");
-            JCheckBox olivas = new JCheckBox("Olīvas");
+            JCheckBox siers = new JCheckBox("Siers(+0.80€)");
+            JCheckBox pepperoni = new JCheckBox("Pepperoni(+1.00€)");
+            JCheckBox senes = new JCheckBox("Sēnes(+0.70€)");
+            JCheckBox olivas = new JCheckBox("Olīvas(+0.60€)");
 
             Object[] message = {
                 "Izvēlies piedevas:",
@@ -200,16 +212,27 @@ public class App {
 
             opcija = JOptionPane.showConfirmDialog(null, message, "Piedevas", JOptionPane.OK_CANCEL_OPTION);
             if (opcija == JOptionPane.OK_OPTION) {
-                if (siers.isSelected()) piedevas.add("Siers");
-                if (pepperoni.isSelected()) piedevas.add("Pepperoni");
-                if (senes.isSelected()) piedevas.add("Sēnes");
-                if (olivas.isSelected()) piedevas.add("Olīvas");
+                if (siers.isSelected()){
+                    piedevas.add("Siers");
+                    cena += 0.80;
+                }
+                if (pepperoni.isSelected()){
+                    piedevas.add("Pepperoni");
+                    cena += 1.00;
+                }
+                if (senes.isSelected()){
+                    piedevas.add("Sēnes");
+                    cena += 0.70;
+                }
+                if (olivas.isSelected()) {
+                    piedevas.add("Olīvas");
+                    cena += 0.60;
+                }
             }
-
-            JCheckBox kecups = new JCheckBox("Kečups");
-            JCheckBox majoneze = new JCheckBox("Majonēze");
-            JCheckBox asaMerce = new JCheckBox("Asā mērce");
-            JCheckBox ipasaMerce = new JCheckBox("Pavāra īpašā mērce");
+            JCheckBox kecups = new JCheckBox("Kečups(+0.30€)");
+            JCheckBox majoneze = new JCheckBox("Majonēze(+0.30€)");
+            JCheckBox asaMerce = new JCheckBox("Asā mērce(+0.40€)");
+            JCheckBox ipasaMerce = new JCheckBox("Pavāra īpašā mērce(+0.70€)");
 
             message = new Object[] {
                 "Izvēlies piedevas:",
@@ -221,21 +244,34 @@ public class App {
 
             opcija = JOptionPane.showConfirmDialog(null, message, "Mērces", JOptionPane.OK_CANCEL_OPTION);
             if (opcija == JOptionPane.OK_OPTION) {
-                if (kecups.isSelected()) merces.add("Kečups");
-                if (majoneze.isSelected()) merces.add("Majonēze");
-                if (asaMerce.isSelected()) merces.add("Asā mērce");
-                if (ipasaMerce.isSelected()) merces.add("Pavāra īpašā mērce");
+                if (kecups.isSelected()) {
+                    merces.add("Kečups");
+                    cena += 0.30;
+                }
+                if (majoneze.isSelected()) {
+                    merces.add("Majonēze");
+                    cena += 0.30;
+                }
+                if (asaMerce.isSelected()) {
+                    merces.add("Asā mērce");
+                    cena += 0.40;
+                }
+                if (ipasaMerce.isSelected()) {
+                    merces.add("Pavāra īpašā mērce");
+                    cena += 0.70;
+                }
             }
 
             piegadeOpcija = JOptionPane.showConfirmDialog(
                 null,
-                "Vai vēlies piegādi?",
+                "Vai vēlies piegādi? (+2.50€)",
                 "Piegādes izvēle",
                 JOptionPane.YES_NO_OPTION
             );
 
             if (piegadeOpcija == JOptionPane.YES_OPTION) {
                 piegade = true;
+                cena += 2.50;
                 adrese = JOptionPane.showInputDialog(null, "Ievadi piegādes adresi:");
                 telNr = JOptionPane.showInputDialog(null, "Ievadi savu telefona numuru:");
             }
@@ -244,7 +280,7 @@ public class App {
                 parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
             }while(parole == null || parole.length() < 5);
 
-        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), 14.99, piegade, adrese, telNr, parole));
+        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), cena, piegade, adrese, telNr, parole));
     }
 
     static void apskatitPasutijumus(){
