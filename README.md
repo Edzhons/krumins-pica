@@ -1,18 +1,43 @@
-## Getting Started
+# 🍕 Picērijas Pasūtījumu Sistēma
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Šis ir vienkāršs Java projekts ar grafisko lietotāja saskarni (GUI), kas ļauj lietotājiem veidot, apskatīt un saņemt picas pasūtījumus, kā arī izvēlēties piegādi. Dati tiek saglabāti un nolasīti no faila `pasutijumi.txt`.
 
-## Folder Structure
+## 🔧 Funkcionalitāte
 
-The workspace contains two folders by default, where:
+- ✅ Jauna pasūtījuma izveide ar izvēlēm (veids, izmērs, piedevas, mērces)
+- 🔐 Paroles pievienošana katram pasūtījumam
+- 📄 Esošo pasūtījumu saraksta apskate
+- 📦 Pasūtījuma saņemšana ar paroles pārbaudi
+- 🚚 Iespēja izvēlēties piegādi ar adreses un telefona numura ievadi
+- 💾 Pasūtījumu saglabāšana un nolasīšana no faila
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## 📂 Failu struktūra
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+- `App.java` – Galvenā programma, kas ietver arī "class Pica"
+- `pasutijumi.txt` – Fails, kur tiek glabāti visi pasūtījumi
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## 🛠️ Prasības
 
-## Dependency Management
+- Java 8+ (vai jebkura Java versija ar `javax.swing` atbalstu)
+- Nav nepieciešamas ārējas bibliotēkas
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## 🚀 Kā darbināt
+
+1. Lejupielādē vai klonē repozitoriju:
+    ```bash
+    git clone https://github.com/Edzhons/krumins-pica.git
+    ```
+2. Atver projektu ar IDE (piemēram, IntelliJ, Eclipse vai VS Code ar Java atbalstu)
+3. Kompilē un palaid `App.java`
+
+## 📌 Piezīmes
+
+- Parole ir obligāta un nepieciešama, lai saņemtu pasūtījumu.
+- Sistēma nepieļauj tukšus pasūtījumus vai pārāk īsas paroles.
+
+## 📞 Saziņai
+
+Ja ir jautājumi vai ieteikumi – droši raksti! ;]  
+Autors: **Edzhons**
+
+---
