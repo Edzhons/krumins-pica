@@ -66,12 +66,5 @@ public class Banka {
             atlikums += daudzums;
         }
     }
-
-    public boolean iznemt(double daudzums) {
-        if (daudzums > 0 && daudzums <= atlikums) {
-            atlikums -= daudzums;
-            return true;
-        }
-        return false;
-    }
+    
 }
