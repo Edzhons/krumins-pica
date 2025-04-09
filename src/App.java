@@ -83,9 +83,10 @@ public class App {
         switch(izvelesIndekss){
             case 0:
                 izveidotKontu();
+                saglabaBankasKontus(bankas);
                 break;
             case 1:
-                picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+                bankas = new ArrayList<>(nolasaBankasKontus());
                 apskatitPasutijumus();
                 break;
             case 2:
@@ -96,34 +97,6 @@ public class App {
         }
 
     }    
-
-    public static void izveidotKontu(){
-        String kontaNosaukums = null, vards = null, uzvards = null, parole = null;
-        Double atlikums = 0.00;
-        while (true) {
-            kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
-
-            if (kontaNosaukums == null) {
-                return;
-            }
-
-            boolean kontsEksiste = false;
-            for (Banka b : bankas) {
-                if (b.getNosaukums().equalsIgnoreCase(kontaNosaukums)) {
-                    kontsEksiste = true;
-                    break;
-                }
-            }
-
-            if (kontsEksiste) {
-                JOptionPane.showMessageDialog(null, "Šāds konta nosaukums jau eksistē. Lūdzu, izvēlies citu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-            } else {
-                bankas.add(new Banka(kontaNosaukums, vards, uzvards, atlikums, parole));
-                JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            }
-        }
-    }
 
     public static void picerijasIzvele(){
         String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu"};
@@ -169,6 +142,79 @@ public class App {
         } catch (IOException e) {
             System.out.println("Kļūda saglabājot pasūtījumus: " + e.getMessage());
         }
+    }
+
+    public static void izveidotKontu(){
+        String kontaNosaukums = null, vards = null, uzvards = null, parole = null;
+        Double atlikums = 0.00;
+        while (true) {
+            kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
+
+            if (kontaNosaukums == null) {
+                return;
+            }
+
+            boolean kontsEksiste = false;
+            for (Banka b : bankas) {
+                if (b.getNosaukums().equalsIgnoreCase(kontaNosaukums)) {
+                    kontsEksiste = true;
+                    break;
+                }
+            }
+
+            if (kontsEksiste) {
+                JOptionPane.showMessageDialog(null, "Šāds konta nosaukums jau eksistē. Lūdzu, izvēlies citu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+            } else {
+                break;
+            }
+        }
+
+        do{
+            vards = JOptionPane.showInputDialog(null, "Ievadi savu vārdu: ");
+            if (vards == null) {
+                return;
+            }
+        }while(!vards.matches("[a-zA-ZāčēģīķļņōŗšūžĀČĒĢĪĶĻŅŌŖŠŪŽ]+"));
+
+        do{
+            uzvards = JOptionPane.showInputDialog(null, "Ievadi savu uzvārdu: ");
+            if (uzvards == null) {
+                return;
+            }
+        }while(!uzvards.matches("[a-zA-ZāčēģīķļņōŗšūžĀČĒĢĪĶĻŅŌŖŠŪŽ]+"));
+        
+        do{
+            parole = JOptionPane.showInputDialog(null, "Ievadi paroli: \n(vismaz 5 rakstzīmes,\nsatur lielo burtu,\nsatur speciālo zīmi(!@#$%^&*()_+=-)): ");
+            if (parole == null) {
+                return;
+            }
+        }while(parole.length() < 5 ||
+        !parole.matches(".*[A-Z].*") ||
+        !parole.matches(".*[!@#$%^&*()_+=-].*"));
+
+        int atbilde = JOptionPane.showConfirmDialog(
+                null,
+                "Konts ir izveidots! Vai vēlies jau tagad kontā iemaksāt naudu?",
+                "Bankas konta izveide",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+
+            String atlikumsStr = null;
+            if (atbilde == JOptionPane.YES_OPTION) {
+                atlikumsStr = JOptionPane.showInputDialog(null, "Cik vēlies iemaksāt?");
+                if (atlikumsStr == null) {
+                    return;
+                }
+                if (atlikumsStr.isEmpty()){
+                    atlikums = 0.00;
+                }else{
+                    atlikums = Double.parseDouble(atlikumsStr);
+                }
+            }
+
+        bankas.add(new Banka(kontaNosaukums, vards, uzvards, atlikums, parole));
+        JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static List<Banka> nolasaBankasKontus() {
