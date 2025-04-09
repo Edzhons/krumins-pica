@@ -30,11 +30,11 @@ public class Banka {
         return parole;
     }
 
-    public String toFileString() { // PAREIZS FORMATS, LAI IERAKSTITU FAILAA (Pica objekts uz String)
+    public String toFileString() {
         return nosaukums + ";" + vards + ";" + uzvards + ";" + atlikums + ";" + parole;
     }
 
-    public static Banka fromFileString(String data) { // PAREIZS FORMATS, LAI NOLASITU NO FAILA (String uz Pica objektu)
+    public static Banka fromFileString(String data) {
         String[] dalas = data.split(";");
 
         String nosaukums = dalas[0];
@@ -47,7 +47,14 @@ public class Banka {
     }
 
 
+    public String getAtributi(){
 
+        return "Nosaukums: " + nosaukums +
+        "\nVārds: " + vards +
+        "\nUzvārds: " + uzvards +
+        "\n\nKonta atlikums: " + atlikums + "€" +
+        "\n[Parole: " + parole + "]";
+    }
 
     public void noguldit(double daudzums) {
         if (daudzums > 0) {
