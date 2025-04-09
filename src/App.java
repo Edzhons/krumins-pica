@@ -51,103 +51,161 @@ public class App {
         if (picasPasutijumi.isEmpty()) {
             int atbilde = JOptionPane.showConfirmDialog(
                 null,
-                "Sveicināts bankā! Vai vēlies izveidot jaunu kontu?",
+                "Sveicināts bankā! Vai vēlies atvērt jaunu kontu?",
                 "Bankas konta izveide",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
             );
     
             if (atbilde == JOptionPane.YES_OPTION) {
-                while (true) {
-                    String kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
-    
-                    if (kontaNosaukums == null) {
-                        return; // Atcelts
-                    }
-    
-                    boolean kontsEksiste = false;
-                    for (Banka b : bankas) {
-                        if (b.getNosaukums().equalsIgnoreCase(kontaNosaukums)) {
-                            kontsEksiste = true;
-                            break;
-                        }
-                    }
-    
-                    if (kontsEksiste) {
-                        JOptionPane.showMessageDialog(null, "Šāds konta nosaukums jau eksistē. Lūdzu, izvēlies citu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        bankas.add(new Banka(kontaNosaukums));
-                        JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
-                        break;
-                    }
-                }
+                izveidotKontu();
             } else {
                 JOptionPane.showMessageDialog(null, "Nu labi... bet bez konta nevarēsi pirkt picas... ;[");
             }
         }
+
+        String[] darbibas = {"Atvērt jaunu bankas kontu", "Apskatīt atvērtos kontus", "Noguldīt kontā naudu", "Izņemt no konta naudu", "Aizvērt bankas kontu"};
+        int izvelesIndekss = 0;
+        String izvele = (String) JOptionPane.showInputDialog(
+            null,
+            "Izvēlies darbību",
+            "Sveicināts bankā!",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            darbibas,
+            darbibas[0]
+        );
+        izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
+        if (izvele == null) {
+            return;
+        }
+
+        switch(izvelesIndekss){
+            case 0:
+                izveidotKontu();
+                break;
+            case 1:
+                picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+                apskatitPasutijumus();
+                break;
+            case 2:
+                picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+                sanemtPasutijumu();
+                saglabaPasutijumus(picasPasutijumi);
+                break;
+        }
+
     }    
+
+    public static void izveidotKontu(){
+        String kontaNosaukums = null, vards = null, uzvards = null, parole = null;
+        Double atlikums = 0.00;
+        while (true) {
+            kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
+
+            if (kontaNosaukums == null) {
+                return;
+            }
+
+            boolean kontsEksiste = false;
+            for (Banka b : bankas) {
+                if (b.getNosaukums().equalsIgnoreCase(kontaNosaukums)) {
+                    kontsEksiste = true;
+                    break;
+                }
+            }
+
+            if (kontsEksiste) {
+                JOptionPane.showMessageDialog(null, "Šāds konta nosaukums jau eksistē. Lūdzu, izvēlies citu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+            } else {
+                bankas.add(new Banka(kontaNosaukums, vards, uzvards, atlikums, parole));
+                JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            }
+        }
+    }
 
     public static void picerijasIzvele(){
         String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu"};
         int izvelesIndekss = 0;
-        while (true){
-            String izvele = (String) JOptionPane.showInputDialog(
-                null,
-                "Izvēlies darbību",
-                "Sveicināts picērijā!",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                darbibas,
-                darbibas[0]
-            );
-            izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
-            if (izvele == null) {
-                return;
-            }
+        String izvele = (String) JOptionPane.showInputDialog(
+            null,
+            "Izvēlies darbību",
+            "Sveicināts picērijā!",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            darbibas,
+            darbibas[0]
+        );
+        izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
+        if (izvele == null) {
+            return;
+        }
 
-            switch(izvelesIndekss){
-                case 0:
-                    izveidotPasutijumu();
-                    saglabaPasutijumus(picasPasutijumi);
-                    break;
-                case 1:
-                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
-                    apskatitPasutijumus();
-                    break;
-                case 2:
-                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
-                    sanemtPasutijumu();
-                    saglabaPasutijumus(picasPasutijumi);
-                    break;
-            }
+        switch(izvelesIndekss){
+            case 0:
+                izveidotPasutijumu();
+                saglabaPasutijumus(picasPasutijumi);
+                break;
+            case 1:
+                picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+                apskatitPasutijumus();
+                break;
+            case 2:
+                picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+                sanemtPasutijumu();
+                saglabaPasutijumus(picasPasutijumi);
+                break;
+        }
         
+    }
+
+    public static void saglabaBankasKontus(List<Banka> bankas) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("pasutijumi.txt", false))) {
+            for (Banka b : bankas) {
+                writer.write(b.toFileString()); // Konvertē Bankas objektu uz String
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Kļūda saglabājot pasūtījumus: " + e.getMessage());
         }
     }
 
-    public static void saglabaPasutijumus(List<Pica> picasPasutijumi) {
-        String fNosaukums = "pasutijumi.txt";
+    public static List<Banka> nolasaBankasKontus() {
+        List<Banka> bankas = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("bankasKonti.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                bankas.add(Banka.fromFileString(line)); // Konvertē String atpakaļ uz Bankas objektu
+            }
+        } catch (IOException e) {
+            System.out.println("Nav neviena pasūtījuma");
+        }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fNosaukums, false))) {
+        return bankas;
+    }
+    
+
+    public static void saglabaPasutijumus(List<Pica> picasPasutijumi) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("pasutijumi.txt", false))) {
             for (Pica pica : picasPasutijumi) {
                 writer.write(pica.toFileString()); // Konvertē Pica objektu uz String
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error saving orders: " + e.getMessage());
+            System.out.println("Kļūda saglabājot pasūtījumus: " + e.getMessage());
         }
     }
 
     public static List<Pica> nolasaPasutijumus() {
-        String fNosaukums = "pasutijumi.txt";
         List<Pica> picasPasutijumi = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fNosaukums))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("pasutijumi.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 picasPasutijumi.add(Pica.fromFileString(line)); // Konvertē String atpakaļ uz Pica objektu
             }
         } catch (IOException e) {
-            System.out.println("No existing orders found, starting fresh.");
+            System.out.println("Nav neviena pasūtījuma");
         }
 
         return picasPasutijumi;
