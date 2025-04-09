@@ -48,58 +48,60 @@ public class App {
     }
 
     public static void bankasIzvele() {
-        bankas = new ArrayList<>(nolasaBankasKontus());
-        if (bankas.isEmpty()) {
-            int atbilde = JOptionPane.showConfirmDialog(
-                null,
-                "Sveicināts bankā! Vai vēlies atvērt jaunu kontu?",
-                "Bankas konta izveide",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-            );
-    
-            if (atbilde == JOptionPane.YES_OPTION) {
-                izveidotKontu();
-            } else {
-                JOptionPane.showMessageDialog(null, "Nu labi... bet bez konta nevarēsi pirkt picas... ;[");
+        while (true){
+            bankas = new ArrayList<>(nolasaBankasKontus());
+            if (bankas.isEmpty()) {
+                int atbilde = JOptionPane.showConfirmDialog(
+                    null,
+                    "Sveicināts bankā! Vai vēlies atvērt jaunu kontu?",
+                    "Bankas konta izveide",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+        
+                if (atbilde == JOptionPane.YES_OPTION) {
+                    izveidotKontu();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nu labi... bet bez konta nevarēsi pirkt picas... ;[");
+                }
             }
-        }
 
-        String[] darbibas = {"Atvērt jaunu bankas kontu", "Apskatīt atvērtos kontus", "Noguldīt kontā naudu", "Aizvērt bankas kontu"};
-        int izvelesIndekss = 0;
-        String izvele = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies darbību",
-            "Sveicināts bankā!",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            darbibas,
-            darbibas[0]
-        );
-        izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
-        if (izvele == null) {
-            return;
-        }
+            String[] darbibas = {"Atvērt jaunu bankas kontu", "Apskatīt atvērtos kontus", "Noguldīt kontā naudu", "Aizvērt bankas kontu"};
+            int izvelesIndekss = 0;
+            String izvele = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies darbību",
+                "Sveicināts bankā!",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                darbibas,
+                darbibas[0]
+            );
+            izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
+            if (izvele == null) {
+                return;
+            }
 
-        switch(izvelesIndekss){
-            case 0:
-                izveidotKontu();
-                saglabaBankasKontus(bankas);
-                break;
-            case 1:
-                bankas = new ArrayList<>(nolasaBankasKontus());
-                apskatitBankasKontus();
-                break;
-            case 2:
-                bankas = new ArrayList<>(nolasaBankasKontus());
-                nogulditNaudu();
-                saglabaBankasKontus(bankas);
-                break;
-            case 3:
-                bankas = new ArrayList<>(nolasaBankasKontus());
-                dzestBankasKontu();
-                saglabaBankasKontus(bankas);
-                break;
+            switch(izvelesIndekss){
+                case 0:
+                    izveidotKontu();
+                    saglabaBankasKontus(bankas);
+                    break;
+                case 1:
+                    bankas = new ArrayList<>(nolasaBankasKontus());
+                    apskatitBankasKontus();
+                    break;
+                case 2:
+                    bankas = new ArrayList<>(nolasaBankasKontus());
+                    nogulditNaudu();
+                    saglabaBankasKontus(bankas);
+                    break;
+                case 3:
+                    bankas = new ArrayList<>(nolasaBankasKontus());
+                    dzestBankasKontu();
+                    saglabaBankasKontus(bankas);
+                    break;
+            }
         }
 
     }
@@ -130,245 +132,256 @@ public class App {
     }
 
     public static void izveidotKontu(){
-        String kontaNosaukums = null, vards = null, uzvards = null, parole = null;
-        Double atlikums = 0.00;
-        while (true) {
-            kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
+        while (true){
+            String kontaNosaukums = null, vards = null, uzvards = null, parole = null;
+            Double atlikums = 0.00;
+            while (true) {
+                kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
 
-            if (kontaNosaukums == null) {
-                return;
-            }
+                if (kontaNosaukums == null) {
+                    return;
+                }
 
-            boolean kontsEksiste = false;
-            for (Banka b : bankas) {
-                if (b.getNosaukums().equalsIgnoreCase(kontaNosaukums)) {
-                    kontsEksiste = true;
+                boolean kontsEksiste = false;
+                for (Banka b : bankas) {
+                    if (b.getNosaukums().equalsIgnoreCase(kontaNosaukums)) {
+                        kontsEksiste = true;
+                        break;
+                    }
+                }
+
+                if (kontsEksiste) {
+                    JOptionPane.showMessageDialog(null, "Šāds konta nosaukums jau eksistē. Lūdzu, izvēlies citu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                } else {
                     break;
                 }
             }
 
-            if (kontsEksiste) {
-                JOptionPane.showMessageDialog(null, "Šāds konta nosaukums jau eksistē. Lūdzu, izvēlies citu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-            } else {
-                break;
-            }
-        }
-
-        do{
-            vards = JOptionPane.showInputDialog(null, "Ievadi savu vārdu: ");
-            if (vards == null) {
-                return;
-            }
-        }while(!vards.matches("[a-zA-ZāčēģīķļņōŗšūžĀČĒĢĪĶĻŅŌŖŠŪŽ]+"));
-
-        do{
-            uzvards = JOptionPane.showInputDialog(null, "Ievadi savu uzvārdu: ");
-            if (uzvards == null) {
-                return;
-            }
-        }while(!uzvards.matches("[a-zA-ZāčēģīķļņōŗšūžĀČĒĢĪĶĻŅŌŖŠŪŽ]+"));
-        
-        do{
-            parole = JOptionPane.showInputDialog(null, "Ievadi paroli: \n(vismaz 5 rakstzīmes,\nsatur lielo burtu,\nsatur speciālo zīmi(!@#$%^&*()_+=-)): ");
-            if (parole == null) {
-                return;
-            }
-        }while(parole.length() < 5 ||
-        !parole.matches(".*[A-Z].*") ||
-        !parole.matches(".*[!@#$%^&*()_+=-].*"));
-
-        int atbilde = JOptionPane.showConfirmDialog(
-                null,
-                "Konts ir izveidots! Vai vēlies jau tagad kontā iemaksāt naudu?",
-                "Bankas konta izveide",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-            );
-
-            String atlikumsStr = null;
-            if (atbilde == JOptionPane.YES_OPTION) {
-                atlikumsStr = JOptionPane.showInputDialog(null, "Cik vēlies iemaksāt?");
-                if (atlikumsStr == null) {
+            do{
+                vards = JOptionPane.showInputDialog(null, "Ievadi savu vārdu: ");
+                if (vards == null) {
                     return;
                 }
-                if (atlikumsStr.isEmpty()){
-                    atlikums = 0.00;
-                }else{
-                    try {
-                        atlikums = Double.parseDouble(atlikumsStr);
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+            }while(!vards.matches("[a-zA-ZāčēģīķļņōŗšūžĀČĒĢĪĶĻŅŌŖŠŪŽ]+"));
+
+            do{
+                uzvards = JOptionPane.showInputDialog(null, "Ievadi savu uzvārdu: ");
+                if (uzvards == null) {
+                    return;
+                }
+            }while(!uzvards.matches("[a-zA-ZāčēģīķļņōŗšūžĀČĒĢĪĶĻŅŌŖŠŪŽ]+"));
+            
+            do{
+                parole = JOptionPane.showInputDialog(null, "Ievadi paroli: \n(vismaz 5 rakstzīmes,\nsatur lielo burtu,\nsatur speciālo zīmi(!@#$%^&*()_+=-)): ");
+                if (parole == null) {
+                    return;
+                }
+            }while(parole.length() < 5 ||
+            !parole.matches(".*[A-Z].*") ||
+            !parole.matches(".*[!@#$%^&*()_+=-].*"));
+
+            int atbilde = JOptionPane.showConfirmDialog(
+                    null,
+                    "Konts ir izveidots! Vai vēlies jau tagad kontā iemaksāt naudu?",
+                    "Bankas konta izveide",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+
+                String atlikumsStr = null;
+                if (atbilde == JOptionPane.YES_OPTION) {
+                    atlikumsStr = JOptionPane.showInputDialog(null, "Cik vēlies iemaksāt?");
+                    if (atlikumsStr == null) {
                         return;
                     }
+                    if (atlikumsStr.isEmpty()){
+                        atlikums = 0.00;
+                    }else{
+                        try {
+                            atlikums = Double.parseDouble(atlikumsStr);
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+                }else{
+                    return;
                 }
-            }else{
-                return;
-            }
 
-        bankas.add(new Banka(kontaNosaukums, vards, uzvards, atlikums, parole));
-        JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
+            bankas.add(new Banka(kontaNosaukums, vards, uzvards, atlikums, parole));
+            JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     static void apskatitBankasKontus(){
-        if (bankas.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String[] kontiStr = bankas.stream()
-        .map(banka -> banka.toString())
-        .toArray(String[]::new);
-        
-        String konts;
-        konts = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies kontu, ko apskatīt: ",
-            "Bankas kontu saraksts",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            kontiStr,
-            kontiStr[0]);
-
-        if (konts == null) {
-            return;
-        }
-
-        int indekss = Arrays.asList(kontiStr).indexOf(konts);
-
-        JOptionPane.showMessageDialog(null, bankas.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    static void nogulditNaudu(){
-        if (bankas.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String[] kontiStr = bankas.stream()
-        .map(banka -> banka.toString())
-        .toArray(String[]::new);
-        
-        String konts;
-        konts = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies kontu, kurā noguldīt naudu: ",
-            "Bankas kontu saraksts",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            kontiStr,
-            kontiStr[0]);
-
-        if (konts == null) {
-            return;
-        }
-
-        int indekss = Arrays.asList(kontiStr).indexOf(konts);
-        Banka izveletaisKonts = bankas.get(indekss);
-
-        String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
-        if (parole.equals(izveletaisKonts.getParole())){
-            double nauda = 0.00;
-            try {
-                nauda = Double.parseDouble(JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?"));
-                if (nauda <= 0) {
-                    JOptionPane.showMessageDialog(null, "Ievadītā summa ir nederīga. Lūdzu, ievadiet pozitīvu skaitli.", "Kļūda", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+        while(true){
+            if (bankas.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            izveletaisKonts.noguldit(nauda);
-            JOptionPane.showMessageDialog(null, "Nauda veiksmīgi noguldīta! Jaunais atlikums: " + izveletaisKonts.getAtlikums(),
-            "Noguldījums veikts", JOptionPane.INFORMATION_MESSAGE);
-        }else{
-            JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
-            return;
+            String[] kontiStr = bankas.stream()
+            .map(banka -> banka.toString())
+            .toArray(String[]::new);
+            
+            String konts;
+            konts = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies kontu, ko apskatīt: ",
+                "Bankas kontu saraksts",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                kontiStr,
+                kontiStr[0]);
+
+            if (konts == null) {
+                return;
+            }
+
+            int indekss = Arrays.asList(kontiStr).indexOf(konts);
+
+            JOptionPane.showMessageDialog(null, bankas.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+        static void nogulditNaudu(){
+            while (true){
+            if (bankas.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String[] kontiStr = bankas.stream()
+            .map(banka -> banka.toString())
+            .toArray(String[]::new);
+            
+            String konts;
+            konts = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies kontu, kurā noguldīt naudu: ",
+                "Bankas kontu saraksts",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                kontiStr,
+                kontiStr[0]);
+
+            if (konts == null) {
+                return;
+            }
+
+            int indekss = Arrays.asList(kontiStr).indexOf(konts);
+            Banka izveletaisKonts = bankas.get(indekss);
+
+            String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+            if (parole.equals(izveletaisKonts.getParole())){
+                double nauda = 0.00;
+                try {
+                    nauda = Double.parseDouble(JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?"));
+                    if (nauda <= 0) {
+                        JOptionPane.showMessageDialog(null, "Ievadītā summa ir nederīga. Lūdzu, ievadiet pozitīvu skaitli.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                izveletaisKonts.noguldit(nauda);
+                JOptionPane.showMessageDialog(null, "Nauda veiksmīgi noguldīta! Jaunais atlikums: " + izveletaisKonts.getAtlikums(),
+                "Noguldījums veikts", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
+                return;
+            }
         }
     }
 
     static void dzestBankasKontu(){
-        if (bankas.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String[] kontiStr = bankas.stream()
-        .map(banka -> banka.toString())
-        .toArray(String[]::new);
-        
-        String konts;
-        konts = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies kontu, kuru vēlies dzēst: ",
-            "Bankas kontu saraksts",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            kontiStr,
-            kontiStr[0]);
-
-        if (konts == null) {
-            return;
-        }
-
-        int indekss = Arrays.asList(kontiStr).indexOf(konts);
-        Banka izveletaisKonts = bankas.get(indekss);
-
-        String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
-        if (parole.equals(izveletaisKonts.getParole())){
-            int atbilde = JOptionPane.showConfirmDialog(
-                null,
-                "Vai tiešām vēlies DZĒST kontu ["+ izveletaisKonts.getNosaukums() +"]?",
-                "Bankas konta dzēšana",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-            );
-
-            if (atbilde == JOptionPane.YES_OPTION) {
-                bankas.remove(indekss);
-                JOptionPane.showMessageDialog(null, "Konts [" + izveletaisKonts.getNosaukums() + "] tika neatgriezeniski dzēsts!",
-                                            "Konts veiksmīgi dzēsts", JOptionPane.INFORMATION_MESSAGE);
-            }else{
+        while (true){
+            if (bankas.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        }else{
-            JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
-            return;
+
+            String[] kontiStr = bankas.stream()
+            .map(banka -> banka.toString())
+            .toArray(String[]::new);
+            
+            String konts;
+            konts = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies kontu, kuru vēlies dzēst: ",
+                "Bankas kontu saraksts",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                kontiStr,
+                kontiStr[0]);
+
+            if (konts == null) {
+                return;
+            }
+
+            int indekss = Arrays.asList(kontiStr).indexOf(konts);
+            Banka izveletaisKonts = bankas.get(indekss);
+
+            String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+            if (parole.equals(izveletaisKonts.getParole())){
+                int atbilde = JOptionPane.showConfirmDialog(
+                    null,
+                    "Vai tiešām vēlies DZĒST kontu ["+ izveletaisKonts.getNosaukums() +"]?",
+                    "Bankas konta dzēšana",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (atbilde == JOptionPane.YES_OPTION) {
+                    bankas.remove(indekss);
+                    JOptionPane.showMessageDialog(null, "Konts [" + izveletaisKonts.getNosaukums() + "] tika neatgriezeniski dzēsts!",
+                                                "Konts veiksmīgi dzēsts", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    return;
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
+                return;
+            }
         }
     }
     
     public static void picerijasIzvele(){
-        String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu"};
-        int izvelesIndekss = 0;
-        String izvele = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies darbību",
-            "Sveicināts picērijā!",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            darbibas,
-            darbibas[0]
-        );
-        izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
-        if (izvele == null) {
-            return;
-        }
+        while (true){
+            picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+            String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu"};
+            int izvelesIndekss = 0;
+            String izvele = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies darbību",
+                "Sveicināts picērijā!",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                darbibas,
+                darbibas[0]
+            );
+            izvelesIndekss = Arrays.asList(darbibas).indexOf(izvele);
+            if (izvele == null) {
+                return;
+            }
 
-        switch(izvelesIndekss){
-            case 0:
-                izveidotPasutijumu();
-                saglabaPasutijumus(picasPasutijumi);
-                break;
-            case 1:
-                picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
-                apskatitPasutijumus();
-                break;
-            case 2:
-                picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
-                sanemtPasutijumu();
-                saglabaPasutijumus(picasPasutijumi);
-                break;
+            switch(izvelesIndekss){
+                case 0:
+                    izveidotPasutijumu();
+                    saglabaPasutijumus(picasPasutijumi);
+                    break;
+                case 1:
+                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+                    apskatitPasutijumus();
+                    break;
+                case 2:
+                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+                    sanemtPasutijumu();
+                    saglabaPasutijumus(picasPasutijumi);
+                    break;
+            }
         }
     }
 
@@ -398,282 +411,288 @@ public class App {
     }
     
     static void izveidotPasutijumu(){
-        if (bankas.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nav neviena bankas konta! Kā taisies samaksāt par pasūtījumu?!?\nTiec pārvirzīts uz bankas konta izveidi!",
-                                            "Kļūda", JOptionPane.ERROR_MESSAGE);
-            izveidotKontu();
-            return;
-        }
-
-        String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
-        String veids = null;
-        String izmers, parole, adrese = null, telNr = null;
-        int opcija, piegadeOpcija;
-        double cena = 0.00;
-        Boolean piegade = false;
-
-        piedevas.clear();
-        merces.clear();
-
-        veids = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies picas veidu:",
-            "Cepam picu...",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            darbibas,
-            darbibas[0]);
-        if (veids == null){
-            return;
-        }
-
-        darbibas = new String[]{"Liela(+8.40€)", "Vidēja(+6.25€)", "Maza(+5.20€)"};
-        izmers = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies picas izmēru:",
-            "Cepam picu...",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            darbibas,
-            darbibas[0]);
-        if (izmers == null){
-            return;
-        }
-        switch(izmers){
-            case "Liela(+8.40€)":
-                cena += 8.40;
-                break;
-            case "Vidēja(+6.25€)":
-                cena += 6.25;    
-                break;
-            case "Maza(+5.20€)":
-                cena += 5.20;
-                break;
-        }
-
-            JCheckBox siers = new JCheckBox("Siers(+0.80€)");
-            JCheckBox pepperoni = new JCheckBox("Pepperoni(+1.00€)");
-            JCheckBox senes = new JCheckBox("Sēnes(+0.70€)");
-            JCheckBox olivas = new JCheckBox("Olīvas(+0.60€)");
-
-            Object[] message = {
-                "Izvēlies piedevas:",
-                siers,
-                pepperoni,
-                senes,
-                olivas
-            };
-
-            opcija = JOptionPane.showConfirmDialog(null, message, "Piedevas", JOptionPane.OK_CANCEL_OPTION);
-            if (opcija == JOptionPane.OK_OPTION) {
-                if (siers.isSelected()){
-                    piedevas.add("Siers");
-                    cena += 0.80;
-                }
-                if (pepperoni.isSelected()){
-                    piedevas.add("Pepperoni");
-                    cena += 1.00;
-                }
-                if (senes.isSelected()){
-                    piedevas.add("Sēnes");
-                    cena += 0.70;
-                }
-                if (olivas.isSelected()) {
-                    piedevas.add("Olīvas");
-                    cena += 0.60;
-                }
-            }else{
-                return;
-            }
-            JCheckBox kecups = new JCheckBox("Kečups(+0.30€)");
-            JCheckBox majoneze = new JCheckBox("Majonēze(+0.30€)");
-            JCheckBox asaMerce = new JCheckBox("Asā mērce(+0.40€)");
-            JCheckBox ipasaMerce = new JCheckBox("Pavāra īpašā mērce(+0.70€)");
-
-            message = new Object[] {
-                "Izvēlies piedevas:",
-                kecups,
-                majoneze,
-                asaMerce,
-                ipasaMerce
-            };
-
-            opcija = JOptionPane.showConfirmDialog(null, message, "Mērces", JOptionPane.OK_CANCEL_OPTION);
-            if (opcija == JOptionPane.OK_OPTION) {
-                if (kecups.isSelected()) {
-                    merces.add("Kečups");
-                    cena += 0.30;
-                }
-                if (majoneze.isSelected()) {
-                    merces.add("Majonēze");
-                    cena += 0.30;
-                }
-                if (asaMerce.isSelected()) {
-                    merces.add("Asā mērce");
-                    cena += 0.40;
-                }
-                if (ipasaMerce.isSelected()) {
-                    merces.add("Pavāra īpašā mērce");
-                    cena += 0.70;
-                }
-            }else{
+        while (true){
+            if (bankas.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nav neviena bankas konta! Kā taisies samaksāt par pasūtījumu?!?\nTiec pārvirzīts uz bankas konta izveidi!",
+                                                "Kļūda", JOptionPane.ERROR_MESSAGE);
+                izveidotKontu();
                 return;
             }
 
-            piegadeOpcija = JOptionPane.showConfirmDialog(
-                null,
-                "Vai vēlies piegādi? (+2.50€)",
-                "Piegādes izvēle",
-                JOptionPane.YES_NO_OPTION
-            );
+            String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
+            String veids = null;
+            String izmers, parole, adrese = null, telNr = null;
+            int opcija, piegadeOpcija;
+            double cena = 0.00;
+            Boolean piegade = false;
 
-            if (piegadeOpcija == JOptionPane.YES_OPTION) {
-                piegade = true;
-                cena += 2.50;
-                adrese = JOptionPane.showInputDialog(null, "Ievadi piegādes adresi:");
-                telNr = JOptionPane.showInputDialog(null, "Ievadi savu telefona numuru:");
+            piedevas.clear();
+            merces.clear();
+
+            veids = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies picas veidu:",
+                "Cepam picu...",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                darbibas,
+                darbibas[0]);
+            if (veids == null){
+                return;
             }
 
-            do{
-                parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
-            }while(parole == null || parole.length() < 5);
-
-            // BANKAS KONTA IZVĒLE, LAI SAMAKSĀTU PAR PASŪTĪJUMU
-        String[] kontiStr = bankas.stream()
-        .map(banka -> banka.toString())
-        .toArray(String[]::new);
-        
-        String konts;
-        konts = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies kontu, ar kuru maksāsi par pasūtījumu: ",
-            "Bankas kontu saraksts",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            kontiStr,
-            kontiStr[0]);
-
-        if (konts == null) {
-            return;
-        }
-
-        int indekss = Arrays.asList(kontiStr).indexOf(konts);
-        Banka izveletaisKonts = bankas.get(indekss);
-
-        String paroleBanka = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
-        if (paroleBanka.equals(izveletaisKonts.getParole())){
-            String piegadee = "";
-            if (piegade){
-                piegadee = "\nPiegāde uz adresi: "+adrese+
-                                "\nTel: "+telNr;
-            }
-            int atbilde = JOptionPane.showConfirmDialog(
+            darbibas = new String[]{"Liela(+8.40€)", "Vidēja(+6.25€)", "Maza(+5.20€)"};
+            izmers = (String) JOptionPane.showInputDialog(
                 null,
-                "Esi pārliecināts, ka vēlies veikt šo pasūtījumu?" +
+                "Izvēlies picas izmēru:",
+                "Cepam picu...",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                darbibas,
+                darbibas[0]);
+            if (izmers == null){
+                return;
+            }
+            switch(izmers){
+                case "Liela(+8.40€)":
+                    cena += 8.40;
+                    break;
+                case "Vidēja(+6.25€)":
+                    cena += 6.25;    
+                    break;
+                case "Maza(+5.20€)":
+                    cena += 5.20;
+                    break;
+            }
 
-                "\n\nVeids: " + veids +
-                "\nIzmērs: " + izmers +
-                "\nPiedevas: " + String.join(",", piedevas) +
-                "\nMērces: " + String.join(",", merces) +
-                piegadee +
-                "\n\nCena: " + String.format("%.2f", cena) +"€"+
-                "\n[Parole: " + parole + "]",
-                "Maksājuma apstiprināšana",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-            );
+                JCheckBox siers = new JCheckBox("Siers(+0.80€)");
+                JCheckBox pepperoni = new JCheckBox("Pepperoni(+1.00€)");
+                JCheckBox senes = new JCheckBox("Sēnes(+0.70€)");
+                JCheckBox olivas = new JCheckBox("Olīvas(+0.60€)");
 
-            if (atbilde == JOptionPane.YES_OPTION) {
-                if (izveletaisKonts.getAtlikums() >= cena){
-                    izveletaisKonts.setAtlikums(izveletaisKonts.getAtlikums() - cena);
-                JOptionPane.showMessageDialog(null, "Pasūtījums tika veiksmīgi apmaksāts!",
-                                            "Pasūtījums veikts", JOptionPane.INFORMATION_MESSAGE);
+                Object[] message = {
+                    "Izvēlies piedevas:",
+                    siers,
+                    pepperoni,
+                    senes,
+                    olivas
+                };
+
+                opcija = JOptionPane.showConfirmDialog(null, message, "Piedevas", JOptionPane.OK_CANCEL_OPTION);
+                if (opcija == JOptionPane.OK_OPTION) {
+                    if (siers.isSelected()){
+                        piedevas.add("Siers");
+                        cena += 0.80;
+                    }
+                    if (pepperoni.isSelected()){
+                        piedevas.add("Pepperoni");
+                        cena += 1.00;
+                    }
+                    if (senes.isSelected()){
+                        piedevas.add("Sēnes");
+                        cena += 0.70;
+                    }
+                    if (olivas.isSelected()) {
+                        piedevas.add("Olīvas");
+                        cena += 0.60;
+                    }
                 }else{
-                    JOptionPane.showMessageDialog(null, "Kontā ir nepietiekami līdzekļi!\nCena: "+cena+"€, Konta atlikums: "+izveletaisKonts.getAtlikums()+"€",
-                                            "Kontā nepietiek līdzekļu", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                JCheckBox kecups = new JCheckBox("Kečups(+0.30€)");
+                JCheckBox majoneze = new JCheckBox("Majonēze(+0.30€)");
+                JCheckBox asaMerce = new JCheckBox("Asā mērce(+0.40€)");
+                JCheckBox ipasaMerce = new JCheckBox("Pavāra īpašā mērce(+0.70€)");
+
+                message = new Object[] {
+                    "Izvēlies piedevas:",
+                    kecups,
+                    majoneze,
+                    asaMerce,
+                    ipasaMerce
+                };
+
+                opcija = JOptionPane.showConfirmDialog(null, message, "Mērces", JOptionPane.OK_CANCEL_OPTION);
+                if (opcija == JOptionPane.OK_OPTION) {
+                    if (kecups.isSelected()) {
+                        merces.add("Kečups");
+                        cena += 0.30;
+                    }
+                    if (majoneze.isSelected()) {
+                        merces.add("Majonēze");
+                        cena += 0.30;
+                    }
+                    if (asaMerce.isSelected()) {
+                        merces.add("Asā mērce");
+                        cena += 0.40;
+                    }
+                    if (ipasaMerce.isSelected()) {
+                        merces.add("Pavāra īpašā mērce");
+                        cena += 0.70;
+                    }
+                }else{
+                    return;
+                }
+
+                piegadeOpcija = JOptionPane.showConfirmDialog(
+                    null,
+                    "Vai vēlies piegādi? (+2.50€)",
+                    "Piegādes izvēle",
+                    JOptionPane.YES_NO_OPTION
+                );
+
+                if (piegadeOpcija == JOptionPane.YES_OPTION) {
+                    piegade = true;
+                    cena += 2.50;
+                    adrese = JOptionPane.showInputDialog(null, "Ievadi piegādes adresi:");
+                    telNr = JOptionPane.showInputDialog(null, "Ievadi savu telefona numuru:");
+                }
+
+                do{
+                    parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
+                }while(parole == null || parole.length() < 5);
+
+                // BANKAS KONTA IZVĒLE, LAI SAMAKSĀTU PAR PASŪTĪJUMU
+            String[] kontiStr = bankas.stream()
+            .map(banka -> banka.toString())
+            .toArray(String[]::new);
+            
+            String konts;
+            konts = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies kontu, ar kuru maksāsi par pasūtījumu: ",
+                "Bankas kontu saraksts",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                kontiStr,
+                kontiStr[0]);
+
+            if (konts == null) {
+                return;
+            }
+
+            int indekss = Arrays.asList(kontiStr).indexOf(konts);
+            Banka izveletaisKonts = bankas.get(indekss);
+
+            String paroleBanka = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+            if (paroleBanka.equals(izveletaisKonts.getParole())){
+                String piegadee = "";
+                if (piegade){
+                    piegadee = "\nPiegāde uz adresi: "+adrese+
+                                    "\nTel: "+telNr;
+                }
+                int atbilde = JOptionPane.showConfirmDialog(
+                    null,
+                    "Esi pārliecināts, ka vēlies veikt šo pasūtījumu?" +
+
+                    "\n\nVeids: " + veids +
+                    "\nIzmērs: " + izmers +
+                    "\nPiedevas: " + String.join(",", piedevas) +
+                    "\nMērces: " + String.join(",", merces) +
+                    piegadee +
+                    "\n\nCena: " + String.format("%.2f", cena) +"€"+
+                    "\n[Parole: " + parole + "]",
+                    "Maksājuma apstiprināšana",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (atbilde == JOptionPane.YES_OPTION) {
+                    if (izveletaisKonts.getAtlikums() >= cena){
+                        izveletaisKonts.setAtlikums(izveletaisKonts.getAtlikums() - cena);
+                    JOptionPane.showMessageDialog(null, "Pasūtījums tika veiksmīgi apmaksāts!",
+                                                "Pasūtījums veikts", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Kontā ir nepietiekami līdzekļi!\nCena: "+cena+"€, Konta atlikums: "+izveletaisKonts.getAtlikums()+"€",
+                                                "Kontā nepietiek līdzekļu", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }else{
                     return;
                 }
             }else{
+                JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
                 return;
             }
-        }else{
-            JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
-            return;
-        }
 
-        picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), cena, piegade, adrese, telNr, parole));
+            picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), cena, piegade, adrese, telNr, parole));
+        }
     }
 
     static void apskatitPasutijumus(){
-        if (picasPasutijumi.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
-            return;
+        while (true) {
+            if (picasPasutijumi.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Convert picasPasutijumi to a String array for selection
+            String[] pasutijumiStr = picasPasutijumi.stream()
+            .map(pica -> pica.toString()) // Convert each Pica to a string
+            .toArray(String[]::new);
+            
+            String pasutijums;
+            pasutijums = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies pasūtījumu, ko apskatīt: ",
+                "Pasūtījumu saraksts",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                pasutijumiStr,
+                pasutijumiStr[0]);
+
+            if (pasutijums == null) {
+                return;
+            }
+
+            int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
+
+            JOptionPane.showMessageDialog(null, picasPasutijumi.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
         }
-
-        // Convert picasPasutijumi to a String array for selection
-        String[] pasutijumiStr = picasPasutijumi.stream()
-        .map(pica -> pica.toString()) // Convert each Pica to a string
-        .toArray(String[]::new);
-        
-        String pasutijums;
-        pasutijums = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies pasūtījumu, ko apskatīt: ",
-            "Pasūtījumu saraksts",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            pasutijumiStr,
-            pasutijumiStr[0]);
-
-        if (pasutijums == null) {
-            return;
-        }
-
-        int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
-
-        JOptionPane.showMessageDialog(null, picasPasutijumi.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
     }
 
     static void sanemtPasutijumu(){
-        if (picasPasutijumi.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String[] pasutijumiStr = picasPasutijumi.stream()
-        .map(pica -> pica.toString())
-        .toArray(String[]::new);
-        
-        int opcija;
-        String pasutijums;
-        pasutijums = (String) JOptionPane.showInputDialog(
-            null,
-            "Izvēlies pasūtījumu, ko saņemt: ",
-            "Pasūtījumu saraksts",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            pasutijumiStr,
-            pasutijumiStr[0]);
-
-        if (pasutijums == null) {
+        while (true){
+            if (picasPasutijumi.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
-        }
-
-        opcija = JOptionPane.showConfirmDialog(null, pasutijums+"\nVai tiešām vēlies saņemt šo pasūtījumu?", "Pasūtījuma informācija", JOptionPane.OK_CANCEL_OPTION);
-        if (opcija == JOptionPane.OK_OPTION) {
-            int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
-
-            if (indekss != -1) {
-                String parole = JOptionPane.showInputDialog(null, "Ievadi paroli, lai saņemtu šo sūtījumu!");
-                if (parole != null && parole.equals(picasPasutijumi.get(indekss).getParole())) {
-                    picasPasutijumi.remove(indekss);
-                    JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi izņemts, labu apetīti! ;]");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nepareiza parole. Pasūtījums netika izņemts.");
-                }
             }
-        }else{
-            JOptionPane.showMessageDialog(null, "Pasūtījums netika izņemts!");
+
+            String[] pasutijumiStr = picasPasutijumi.stream()
+            .map(pica -> pica.toString())
+            .toArray(String[]::new);
+            
+            int opcija;
+            String pasutijums;
+            pasutijums = (String) JOptionPane.showInputDialog(
+                null,
+                "Izvēlies pasūtījumu, ko saņemt: ",
+                "Pasūtījumu saraksts",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                pasutijumiStr,
+                pasutijumiStr[0]);
+
+            if (pasutijums == null) {
+                    return;
+            }
+
+            opcija = JOptionPane.showConfirmDialog(null, pasutijums+"\nVai tiešām vēlies saņemt šo pasūtījumu?", "Pasūtījuma informācija", JOptionPane.OK_CANCEL_OPTION);
+            if (opcija == JOptionPane.OK_OPTION) {
+                int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
+
+                if (indekss != -1) {
+                    String parole = JOptionPane.showInputDialog(null, "Ievadi paroli, lai saņemtu šo sūtījumu!");
+                    if (parole != null && parole.equals(picasPasutijumi.get(indekss).getParole())) {
+                        picasPasutijumi.remove(indekss);
+                        JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi izņemts, labu apetīti! ;]");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Nepareiza parole. Pasūtījums netika izņemts.");
+                    }
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Pasūtījums netika izņemts!");
+            }
         }
     }
 }
