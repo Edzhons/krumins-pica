@@ -114,7 +114,6 @@ public class App {
             for (Banka b : bankas) {
                 writer.write(b.toFileString()); // Konvertē Bankas objektu uz String
                 writer.newLine();
-                System.out.println("Saglabāju kontu...");
             }
         } catch (IOException e) {
             System.out.println("Kļūda saglabājot bankas kontus: " + e.getMessage());

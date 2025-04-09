@@ -46,15 +46,20 @@ public class Banka {
         return new Banka(nosaukums, vards, uzvards, atlikums, parole);
     }
 
-
     public String getAtributi(){
 
-        return "Nosaukums: " + nosaukums +
+        return "Konta nosaukums: " + nosaukums +
         "\nVārds: " + vards +
         "\nUzvārds: " + uzvards +
         "\n\nKonta atlikums: " + atlikums + "€" +
         "\n[Parole: " + parole + "]";
     }
+
+    @Override
+    public String toString() {
+        return "[" + nosaukums + "] " +"(" + vards + " " +uzvards + ") " + "> " + atlikums + "€ <";
+    }
+
 
     public void noguldit(double daudzums) {
         if (daudzums > 0) {
