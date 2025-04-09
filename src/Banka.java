@@ -66,5 +66,11 @@ public class Banka {
             atlikums += daudzums;
         }
     }
+
+    public void setAtlikums(double daudzums) {
+        if (daudzums >= 0) {
+            atlikums = daudzums;
+        }
+    }
     
 }
