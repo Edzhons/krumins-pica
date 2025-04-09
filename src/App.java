@@ -22,8 +22,8 @@ public class App {
         do{
             String izvele = (String) JOptionPane.showInputDialog(
                 null,
-                "Izvēlies darbību",
-                "Sveicināts picērijā!",
+                "Galvenā izvēlne",
+                "Sveiks!",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 darbibas,
@@ -47,24 +47,45 @@ public class App {
         }while(izvelesIndekss != 2);
     }
 
-    public static void bankasIzvele(){
+    public static void bankasIzvele() {
         if (picasPasutijumi.isEmpty()) {
             int atbilde = JOptionPane.showConfirmDialog(
                 null,
                 "Sveicināts bankā! Vai vēlies izveidot jaunu kontu?",
-                "Kļūda",
+                "Bankas konta izveide",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
             );
-            
+    
             if (atbilde == JOptionPane.YES_OPTION) {
-                System.out.println("Jauns konts tiek izveidots...");
+                while (true) {
+                    String kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
+    
+                    if (kontaNosaukums == null) {
+                        return; // Atcelts
+                    }
+    
+                    boolean kontsEksiste = false;
+                    for (Banka b : bankas) {
+                        if (b.getNosaukums().equalsIgnoreCase(kontaNosaukums)) {
+                            kontsEksiste = true;
+                            break;
+                        }
+                    }
+    
+                    if (kontsEksiste) {
+                        JOptionPane.showMessageDialog(null, "Šāds konta nosaukums jau eksistē. Lūdzu, izvēlies citu!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        bankas.add(new Banka(kontaNosaukums));
+                        JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
+                        break;
+                    }
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Nu labi... bet bez konta nevarēsi pirkt picas... ;[");
-                return;
             }
-    }
-}
+        }
+    }    
 
     public static void picerijasIzvele(){
         String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu"};
