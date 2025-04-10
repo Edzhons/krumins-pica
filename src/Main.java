@@ -1,9 +1,11 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-
+        Dati.bankas = new ArrayList<>(Banka.nolasaBankasKontus());
+        Dati.picasPasutijumi = new ArrayList<>(Pica.nolasaPasutijumus());
         String[] darbibas = {"Banka", "Picērija", "Iziet"};
         int izvelesIndekss = 0;
         do{
