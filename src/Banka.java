@@ -127,7 +127,7 @@ public class Banka {
                     apskatitBankasKontus();
                     break;
                 case 2:
-                    nogulditNaudu();
+                    nogulditNaudu(null);
                     break;
                 case 3:
                     dzestBankasKontu();
@@ -281,61 +281,73 @@ public class Banka {
         }
     }
 
-        static void nogulditNaudu(){
+        static void nogulditNaudu(Banka izveletaisKonts){
             while (true){
                 Dati.bankas = new ArrayList<>(nolasaBankasKontus());
-            if (Dati.bankas.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
 
-            String[] kontiStr = Dati.bankas.stream()
-            .map(banka -> banka.toString())
-            .toArray(String[]::new);
-            
-            String konts;
-            konts = (String) JOptionPane.showInputDialog(
-                null,
-                "Izvēlies kontu, kurā noguldīt naudu: ",
-                "Bankas kontu saraksts",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                kontiStr,
-                kontiStr[0]);
-
-            if (konts == null) {
-                return;
-            }
-
-            int indekss = Arrays.asList(kontiStr).indexOf(konts);
-            Banka izveletaisKonts = Dati.bankas.get(indekss);
-
-            String parole = null;
-            do{
-            parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
-            }while(parole == null || parole.isEmpty());
-            
-            if (parole.equals(izveletaisKonts.getParole())){
-                double nauda = 0.00;
-                try {
-                    nauda = Double.parseDouble(JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?"));
-                    if (nauda <= 0) {
-                        JOptionPane.showMessageDialog(null, "Ievadītā summa ir nederīga. Lūdzu, ievadiet pozitīvu skaitli.", "Kļūda", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                if (Dati.bankas.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                izveletaisKonts.noguldit(nauda);
-                JOptionPane.showMessageDialog(null, "Nauda veiksmīgi noguldīta! Jaunais atlikums: " + izveletaisKonts.getAtlikums(),
-                "Noguldījums veikts", JOptionPane.INFORMATION_MESSAGE);
-                saglabaBankasKontus(Dati.bankas);
-                break;
-            }else{
-                JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
+                if (izveletaisKonts == null){
+                    String[] kontiStr = Dati.bankas.stream()
+                    .map(banka -> banka.toString())
+                    .toArray(String[]::new);
+                    
+                    String konts;
+                    konts = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Izvēlies kontu, kurā noguldīt naudu: ",
+                        "Bankas kontu saraksts",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        kontiStr,
+                        kontiStr[0]);
+
+                    if (konts == null) {
+                        return;
+                    }
+
+                    int indekss = Arrays.asList(kontiStr).indexOf(konts);
+                    izveletaisKonts = Dati.bankas.get(indekss);
+                } else {
+                    // 🔁 Atrodam īsto objektu sarakstā, nevis tikai padoto kopiju
+                    for (Banka b : Dati.bankas) {
+                        if (b.getNosaukums().equals(izveletaisKonts.getNosaukums())) {
+                            izveletaisKonts = b;
+                            break;
+                        }
+                    }
                 }
+
+                // Paroles ievade
+                String parole = null;
+                do{
+                parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+                }while(parole == null || parole.isEmpty());
+                
+                if (parole.equals(izveletaisKonts.getParole())){
+                    double nauda = 0.00;
+                    try {
+                        nauda = Double.parseDouble(JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?"));
+                        if (nauda <= 0) {
+                            JOptionPane.showMessageDialog(null, "Ievadītā summa ir nederīga. Lūdzu, ievadiet pozitīvu skaitli.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    izveletaisKonts.noguldit(nauda);
+                    JOptionPane.showMessageDialog(null, "Nauda veiksmīgi noguldīta! Jaunais atlikums: " + izveletaisKonts.getAtlikums(),
+                    "Noguldījums veikts", JOptionPane.INFORMATION_MESSAGE);
+                    saglabaBankasKontus(Dati.bankas);
+                    break;
+                }else{
+                    JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
+                    }
             }
         }
 

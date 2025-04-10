@@ -148,7 +148,6 @@ class Pica {
     
     static void izveidotPasutijumu(){
         while (true){
-            Banka.nolasaBankasKontus();
             if (Dati.bankas.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nav neviena bankas konta! Kā taisies samaksāt par pasūtījumu?!?\nTiec pārvirzīts uz bankas konta izveidi!",
                                                 "Kļūda", JOptionPane.ERROR_MESSAGE);
@@ -296,6 +295,7 @@ class Pica {
 
     static void apmaksatPasutijumu(Pica pasutijums) {
         while (true) {
+            Banka.nolasaBankasKontus();
             String[] kontiStr = Dati.bankas.stream()
                 .map(b -> b.toString())
                 .toArray(String[]::new);
@@ -334,7 +334,7 @@ class Pica {
                     opcijas[0]);
     
                 if (izvele == 0) {
-                    Banka.nogulditNaudu();
+                    Banka.nogulditNaudu(izveletaisKonts);
                 } else if (izvele == 1) {
                     continue; // atpakaļ uz konta izvēli
                 } else {
