@@ -72,5 +72,7 @@ public class Banka {
             atlikums = daudzums;
         }
     }
+
+    
     
 }

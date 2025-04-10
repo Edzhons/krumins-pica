@@ -48,8 +48,7 @@ public class App {
     }
 
     public static void bankasIzvele() {
-        while (true){
-            bankas = new ArrayList<>(nolasaBankasKontus());
+        bankas = new ArrayList<>(nolasaBankasKontus());
             if (bankas.isEmpty()) {
                 int atbilde = JOptionPane.showConfirmDialog(
                     null,
@@ -65,7 +64,7 @@ public class App {
                     JOptionPane.showMessageDialog(null, "Nu labi... bet bez konta nevarēsi pirkt picas... ;[");
                 }
             }
-
+        while (true){
             String[] darbibas = {"Atvērt jaunu bankas kontu", "Apskatīt atvērtos kontus", "Noguldīt kontā naudu", "Aizvērt bankas kontu"};
             int izvelesIndekss = 0;
             String izvele = (String) JOptionPane.showInputDialog(
@@ -85,21 +84,15 @@ public class App {
             switch(izvelesIndekss){
                 case 0:
                     izveidotKontu();
-                    saglabaBankasKontus(bankas);
                     break;
                 case 1:
-                    bankas = new ArrayList<>(nolasaBankasKontus());
                     apskatitBankasKontus();
                     break;
                 case 2:
-                    bankas = new ArrayList<>(nolasaBankasKontus());
                     nogulditNaudu();
-                    saglabaBankasKontus(bankas);
                     break;
                 case 3:
-                    bankas = new ArrayList<>(nolasaBankasKontus());
                     dzestBankasKontu();
-                    saglabaBankasKontus(bankas);
                     break;
             }
         }
@@ -210,11 +203,14 @@ public class App {
 
             bankas.add(new Banka(kontaNosaukums, vards, uzvards, atlikums, parole));
             JOptionPane.showMessageDialog(null, "Konts veiksmīgi izveidots!", "Jauns bankas konts", JOptionPane.INFORMATION_MESSAGE);
+            saglabaBankasKontus(bankas);
+            break;
         }
     }
 
     static void apskatitBankasKontus(){
         while(true){
+            bankas = new ArrayList<>(nolasaBankasKontus());
             if (bankas.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -240,12 +236,14 @@ public class App {
 
             int indekss = Arrays.asList(kontiStr).indexOf(konts);
 
-            JOptionPane.showMessageDialog(null, bankas.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, bankas.get(indekss).getAtributi(), "Konta INFO:", JOptionPane.INFORMATION_MESSAGE);
+            break;
         }
     }
 
         static void nogulditNaudu(){
             while (true){
+            bankas = new ArrayList<>(nolasaBankasKontus());
             if (bankas.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -289,6 +287,8 @@ public class App {
                 izveletaisKonts.noguldit(nauda);
                 JOptionPane.showMessageDialog(null, "Nauda veiksmīgi noguldīta! Jaunais atlikums: " + izveletaisKonts.getAtlikums(),
                 "Noguldījums veikts", JOptionPane.INFORMATION_MESSAGE);
+                saglabaBankasKontus(bankas);
+                break;
             }else{
                 JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
                 return;
@@ -298,6 +298,7 @@ public class App {
 
     static void dzestBankasKontu(){
         while (true){
+            bankas = new ArrayList<>(nolasaBankasKontus());
             if (bankas.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nav neviena bankas konta!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -338,6 +339,8 @@ public class App {
                     bankas.remove(indekss);
                     JOptionPane.showMessageDialog(null, "Konts [" + izveletaisKonts.getNosaukums() + "] tika neatgriezeniski dzēsts!",
                                                 "Konts veiksmīgi dzēsts", JOptionPane.INFORMATION_MESSAGE);
+                    saglabaBankasKontus(bankas);
+                    break;
                 }else{
                     return;
                 }
@@ -370,16 +373,12 @@ public class App {
             switch(izvelesIndekss){
                 case 0:
                     izveidotPasutijumu();
-                    saglabaPasutijumus(picasPasutijumi);
                     break;
                 case 1:
-                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
                     apskatitPasutijumus();
                     break;
                 case 2:
-                    picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
                     sanemtPasutijumu();
-                    saglabaPasutijumus(picasPasutijumi);
                     break;
             }
         }
@@ -602,6 +601,9 @@ public class App {
                         izveletaisKonts.setAtlikums(izveletaisKonts.getAtlikums() - cena);
                     JOptionPane.showMessageDialog(null, "Pasūtījums tika veiksmīgi apmaksāts!",
                                                 "Pasūtījums veikts", JOptionPane.INFORMATION_MESSAGE);
+                    picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), cena, piegade, adrese, telNr, parole));
+                    saglabaPasutijumus(picasPasutijumi);
+                    break;
                     }else{
                         JOptionPane.showMessageDialog(null, "Kontā ir nepietiekami līdzekļi!\nCena: "+cena+"€, Konta atlikums: "+izveletaisKonts.getAtlikums()+"€",
                                                 "Kontā nepietiek līdzekļu", JOptionPane.WARNING_MESSAGE);
@@ -614,13 +616,12 @@ public class App {
                 JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
                 return;
             }
-
-            picasPasutijumi.add(new Pica(veids, izmers, new ArrayList<>(piedevas), new ArrayList<>(merces), cena, piegade, adrese, telNr, parole));
         }
     }
 
     static void apskatitPasutijumus(){
         while (true) {
+            picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
             if (picasPasutijumi.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -648,11 +649,13 @@ public class App {
             int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
 
             JOptionPane.showMessageDialog(null, picasPasutijumi.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
+            break;
         }
     }
 
     static void sanemtPasutijumu(){
         while (true){
+            picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
             if (picasPasutijumi.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -686,6 +689,8 @@ public class App {
                     if (parole != null && parole.equals(picasPasutijumi.get(indekss).getParole())) {
                         picasPasutijumi.remove(indekss);
                         JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi izņemts, labu apetīti! ;]");
+                        saglabaPasutijumus(picasPasutijumi);
+                        break;
                     } else {
                         JOptionPane.showMessageDialog(null, "Nepareiza parole. Pasūtījums netika izņemts.");
                     }
