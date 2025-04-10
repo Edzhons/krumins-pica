@@ -83,6 +83,7 @@ class Pica {
         return veids + " (" + izmers + ") - " + String.format("%.2f", cena) + "€";
     }
 
+        // Galvenās metodes
         public static void picerijasIzvele(){
         while (true){
             Dati.picasPasutijumi = new ArrayList<>(nolasaPasutijumus());

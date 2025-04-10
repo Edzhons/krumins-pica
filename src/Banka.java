@@ -84,6 +84,7 @@ public class Banka {
         }
     }
 
+    // Galvenās metodes
     public static void bankasIzvele() {
         Dati.bankas = new ArrayList<>(nolasaBankasKontus());
             if (Dati.bankas.isEmpty()) {
@@ -166,11 +167,13 @@ public class Banka {
             String kontaNosaukums = null, vards = null, uzvards = null, parole = null;
             Double atlikums = 0.00;
             while (true) {
-                kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
+                do{
+                    kontaNosaukums = JOptionPane.showInputDialog(null, "Ievadi konta nosaukumu:", "MansKonts1");
 
-                if (kontaNosaukums == null) {
-                    return;
-                }
+                    if (kontaNosaukums == null) {
+                        return;
+                    }
+                }while(kontaNosaukums.isEmpty());
 
                 boolean kontsEksiste = false;
                 for (Banka b : Dati.bankas) {
@@ -307,7 +310,11 @@ public class Banka {
             int indekss = Arrays.asList(kontiStr).indexOf(konts);
             Banka izveletaisKonts = Dati.bankas.get(indekss);
 
-            String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+            String parole = null;
+            do{
+            parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+            }while(parole == null || parole.isEmpty());
+            
             if (parole.equals(izveletaisKonts.getParole())){
                 double nauda = 0.00;
                 try {
@@ -328,10 +335,9 @@ public class Banka {
                 break;
             }else{
                 JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
-                return;
+                }
             }
         }
-    }
 
     static void dzestBankasKontu(){
         while (true){
