@@ -367,8 +367,12 @@ public class Banka {
 
             int indekss = Arrays.asList(kontiStr).indexOf(konts);
             Banka izveletaisKonts = Dati.bankas.get(indekss);
+            
+            String parole = null;
+            do{
+            parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+            }while(parole == null || parole.isEmpty());
 
-            String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
             if (parole.equals(izveletaisKonts.getParole())){
                 int atbilde = JOptionPane.showConfirmDialog(
                     null,
@@ -389,7 +393,6 @@ public class Banka {
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "Nepareiza parole! NELIEN SVEŠĀ KONTĀ!");
-                return;
             }
         }
     }
