@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
-public class App {
+public class Main {
     public static void main(String[] args) throws Exception {
 
         String[] darbibas = {"Banka", "Picērija", "Iziet"};
