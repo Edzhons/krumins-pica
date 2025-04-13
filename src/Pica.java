@@ -112,7 +112,7 @@ class Pica {
                     izveidotPasutijumu();
                     break;
                 case 1:
-                    apskatitPasutijumus();
+                    apskatitPasutijumus(null);
                     break;
                 case 2:
                     sanemtPasutijumu();
@@ -286,11 +286,11 @@ class Pica {
 
                 do{
                     parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
-                }while(parole == null || parole.length() < 5);
+                }while(parole == null || parole.length() < 5 || parole.contains(";"));
                 
                 Pica pasutijums = new Pica(veids, izmers, new ArrayList<>(Dati.piedevas), new ArrayList<>(Dati.merces), cena, piegade, adrese, telNr, parole);
                 if (apmaksatPasutijumu(pasutijums)){
-                    
+                    apskatitPasutijumus(pasutijums);
                     break; // Iziet no cikla, ja pasūtījums veiksmīgi apmaksāts
                 }else{
                     JOptionPane.showMessageDialog(null, "Pasūtījums netika veikts!", "Kļūda", JOptionPane.ERROR_MESSAGE);
@@ -357,36 +357,47 @@ class Pica {
         }
     }
 
-    static void apskatitPasutijumus(){
+    static void apskatitPasutijumus(Pica izveletaPica){
         while (true) {
             Dati.picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+
             if (Dati.picasPasutijumi.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nav pieejamu pasūtījumu.", "Kļūda", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Convert picasPasutijumi to a String array for selection
-            String[] pasutijumiStr = Dati.picasPasutijumi.stream()
-            .map(pica -> pica.toString()) // Convert each Pica to a string
-            .toArray(String[]::new);
-            
-            String pasutijums;
-            pasutijums = (String) JOptionPane.showInputDialog(
-                null,
-                "Izvēlies pasūtījumu, ko apskatīt: ",
-                "Pasūtījumu saraksts",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                pasutijumiStr,
-                pasutijumiStr[0]);
+            if (izveletaPica == null){
+                // Convert picasPasutijumi to a String array for selection
+                String[] pasutijumiStr = Dati.picasPasutijumi.stream()
+                .map(pica -> pica.toString()) // Convert each Pica to a string
+                .toArray(String[]::new);
+                
+                String pasutijums;
+                pasutijums = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Izvēlies pasūtījumu, ko apskatīt: ",
+                    "Pasūtījumu saraksts",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    pasutijumiStr,
+                    pasutijumiStr[0]);
 
-            if (pasutijums == null) {
-                return;
+                if (pasutijums == null) {
+                    return;
+                }
+
+                int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
+                izveletaPica = Dati.picasPasutijumi.get(indekss);
+            }else{
+                for (Pica p : Dati.picasPasutijumi) {
+                    if (p.getParole().equals(izveletaPica.getParole())) {
+                        izveletaPica = p;
+                        break;
+                    }
+                }
             }
 
-            int indekss = Arrays.asList(pasutijumiStr).indexOf(pasutijums);
-
-            JOptionPane.showMessageDialog(null, Dati.picasPasutijumi.get(indekss).getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, izveletaPica.getAtributi(), "Pasūtījuma informācija", JOptionPane.INFORMATION_MESSAGE);
             break;
         }
     }

@@ -211,7 +211,8 @@ public class Banka {
                 }
             }while(parole.length() < 5 ||
             !parole.matches(".*[A-Z].*") ||
-            !parole.matches(".*[!@#$%^&*()_+=-].*"));
+            !parole.matches(".*[!@#$%^&*()_+=-].*") ||
+            parole.contains(";"));
 
             int atbilde = JOptionPane.showConfirmDialog(
                     null,
@@ -238,7 +239,7 @@ public class Banka {
                         }
                     }
                 }else{
-                    return;
+                    atlikums = 0.00;
                 }
 
                 Dati.bankas.add(new Banka(kontaNosaukums, vards, uzvards, atlikums, parole));
