@@ -330,15 +330,23 @@ public class Banka {
                 
                 if (parole.equals(izveletaisKonts.getParole())){
                     double nauda = 0.00;
-                    try {
-                        nauda = Double.parseDouble(JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?"));
-                        if (nauda <= 0) {
-                            JOptionPane.showMessageDialog(null, "Ievadītā summa ir nederīga. Lūdzu, ievadiet pozitīvu skaitli.", "Kļūda", JOptionPane.ERROR_MESSAGE);
-                            return;
+                    while(true){
+                        try {
+                            String naudaStr = JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?");
+                            if (naudaStr == null) {
+                                return;
+                            }else{
+                                nauda = Double.parseDouble(naudaStr);
+                            }
+
+                            if (nauda <= 0.00) {
+                                JOptionPane.showMessageDialog(null, "Ievadītā summa ir nederīga. Lūdzu, ievadiet pozitīvu skaitli.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                            }else{
+                                break;
+                            }
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
                         }
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-                        return;
                     }
 
                     izveletaisKonts.noguldit(nauda);
