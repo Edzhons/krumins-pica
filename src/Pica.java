@@ -280,12 +280,39 @@ class Pica {
                 if (piegadeOpcija == JOptionPane.YES_OPTION) {
                     piegade = true;
                     cena += 2.50;
-                    adrese = JOptionPane.showInputDialog(null, "Ievadi piegādes adresi:");
-                    telNr = JOptionPane.showInputDialog(null, "Ievadi savu telefona numuru:");
+                    while (true) {
+                        adrese = JOptionPane.showInputDialog(null, "Ievadi piegādes adresi:");
+                        if (adrese == null) {
+                            return;
+                        }
+                        adrese = adrese.trim();
+                        if (adrese.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Adrese nevar būt tukša!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            break;
+                        }
+                    }
+
+                    while (true) {
+                        telNr = JOptionPane.showInputDialog(null, "Ievadi savu telefona numuru:");
+                        if (telNr == null) {
+                            return;
+                        }
+                        telNr = telNr.trim();
+
+                        if (!telNr.matches("\\d{8,}")) {
+                            JOptionPane.showMessageDialog(null, "Telefona numuram jāsatur vismaz 8 cipari bez burtiem vai simboliem!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            break;
+                        }
+                    }
                 }
 
                 do{
                     parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
+                    if (parole == null){
+                        return;
+                    }
                 }while(parole == null || parole.length() < 5 || parole.contains(";"));
                 
                 Pica pasutijums = new Pica(veids, izmers, new ArrayList<>(Dati.piedevas), new ArrayList<>(Dati.merces), cena, piegade, adrese, telNr, parole);
