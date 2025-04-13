@@ -289,11 +289,16 @@ class Pica {
                 }while(parole == null || parole.length() < 5);
                 
                 Pica pasutijums = new Pica(veids, izmers, new ArrayList<>(Dati.piedevas), new ArrayList<>(Dati.merces), cena, piegade, adrese, telNr, parole);
-                apmaksatPasutijumu(pasutijums);
+                if (apmaksatPasutijumu(pasutijums)){
+                    
+                    break; // Iziet no cikla, ja pasūtījums veiksmīgi apmaksāts
+                }else{
+                    JOptionPane.showMessageDialog(null, "Pasūtījums netika veikts!", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                } // Ja pasūtījums netika veikts, tad atgriežas pie sākuma
         }
     }
 
-    static void apmaksatPasutijumu(Pica pasutijums) {
+    static Boolean apmaksatPasutijumu(Pica pasutijums) {
         while (true) {
             Banka.nolasaBankasKontus();
             String[] kontiStr = Dati.bankas.stream()
@@ -309,13 +314,13 @@ class Pica {
                 kontiStr,
                 kontiStr[0]);
     
-            if (konts == null) return;
+            if (konts == null) return false;
     
             int indekss = Arrays.asList(kontiStr).indexOf(konts);
             Banka izveletaisKonts = Dati.bankas.get(indekss);
     
             String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
-            if (parole == null) return;
+            if (parole == null) return false;
     
             if (!parole.equals(izveletaisKonts.getParole())) {
                 JOptionPane.showMessageDialog(null, "Nepareiza parole!");
@@ -338,7 +343,7 @@ class Pica {
                 } else if (izvele == 1) {
                     continue; // atpakaļ uz konta izvēli
                 } else {
-                    return;
+                    return false;
                 }
             } else {
                 // Apmaksa
@@ -347,7 +352,7 @@ class Pica {
                 saglabaPasutijumus(Dati.picasPasutijumi);
                 Banka.saglabaBankasKontus(Dati.bankas);
                 JOptionPane.showMessageDialog(null, "Pasūtījums veiksmīgi apmaksāts!");
-                return;
+                return true;
             }
         }
     }
