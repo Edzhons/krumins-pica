@@ -2,6 +2,7 @@ import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -308,12 +309,29 @@ class Pica {
                     }
                 }
 
-                do{
-                    parole = JOptionPane.showInputDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu(vismaz 5 rakstzīmes): ");
-                    if (parole == null){
+                JOptionPane.showMessageDialog(null, "Ievadi paroli, kas būs jāuzrāda, kad saņemsi savu pasūtījumu (vismaz 5 rakstzīmes):");
+                do {
+                    JPasswordField passwordField = new JPasswordField();
+                    int option = JOptionPane.showConfirmDialog(
+                        null,
+                        passwordField,
+                        "Ievadi paroli:",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
+                    );
+
+                    if (option != JOptionPane.OK_OPTION) {
                         return;
                     }
-                }while(parole == null || parole.length() < 5 || parole.contains(";"));
+
+                    parole = new String(passwordField.getPassword());
+
+                    if (parole.length() < 5 || parole.contains(";")) {
+                        JOptionPane.showMessageDialog(null, "Parolei jābūt vismaz 5 rakstzīmēm un bez ';' simboliem.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                        parole = null;
+                    }
+
+                } while (parole == null);
                 
                 Pica pasutijums = new Pica(veids, izmers, new ArrayList<>(Dati.piedevas), new ArrayList<>(Dati.merces), cena, piegade, adrese, telNr, parole);
                 if (apmaksatPasutijumu(pasutijums)){
@@ -346,7 +364,7 @@ class Pica {
             int indekss = Arrays.asList(kontiStr).indexOf(konts);
             Banka izveletaisKonts = Dati.bankas.get(indekss);
     
-            String parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+            String parole = JOptionPane.showInputDialog(null, "Ievadi ["+izveletaisKonts.getNosaukums()+"] konta paroli:");
             if (parole == null) return false;
     
             if (!parole.equals(izveletaisKonts.getParole())) {

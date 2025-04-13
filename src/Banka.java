@@ -325,7 +325,7 @@ public class Banka {
                 // Paroles ievade
                 String parole = null;
                 do{
-                parole = JOptionPane.showInputDialog(null, "Ievadi konta paroli:");
+                parole = JOptionPane.showInputDialog(null, "Ievadi ["+izveletaisKonts.getNosaukums()+"] konta paroli:");
                 }while(parole == null || parole.isEmpty());
                 
                 if (parole.equals(izveletaisKonts.getParole())){
