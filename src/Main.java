@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Dati.bankas = new ArrayList<>(Banka.nolasaBankasKontus());
         Dati.picasPasutijumi = new ArrayList<>(Pica.nolasaPasutijumus());
-        String[] darbibas = {"Banka", "Picērija", "Iziet"};
+        String[] darbibas = {"Banka", "Picērija", "Noteikumi / Instrukcija", "Iziet"};
         int izvelesIndekss = 0;
         do{
             String izvele = (String) JOptionPane.showInputDialog(
@@ -31,8 +31,18 @@ public class Main {
                 case 1:
                     Pica.picerijasIzvele();
                     break;
+                case 2:
+                    noteikumi();
+                    break;
             }
         
-        }while(izvelesIndekss != 2);
+        }while(izvelesIndekss != 3);
+    }
+
+    static void noteikumi() {
+        String noteikumi = "Sveiks! Šī ir programma, kas ļauj taisīt / rediģēt bankas kontus un veikt picērijas pasūtījumus.\n" +
+                "Izvēlies kādu no pieejamajām opcijām un seko norādēm.\n" +
+                "Ja vēlies iziet no programmas, izvēlies 'Iziet'.";
+        JOptionPane.showMessageDialog(null, noteikumi, "Noteikumi", JOptionPane.INFORMATION_MESSAGE);
     }
 }
