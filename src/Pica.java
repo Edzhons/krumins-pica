@@ -1,5 +1,6 @@
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
@@ -92,6 +93,7 @@ class Pica {
         public static void picerijasIzvele(){
         while (true){
             Dati.picasPasutijumi = new ArrayList<>(nolasaPasutijumus());
+            ImageIcon picaImg = new ImageIcon(Main.class.getResource("/resources/picerija.png"));
             String[] darbibas = {"Izveidot jaunu pasūtījumu", "Apskatīt esošos pasūtījumus", "Saņemt pasūtījumu"};
             int izvelesIndekss = 0;
             String izvele = (String) JOptionPane.showInputDialog(
@@ -99,7 +101,7 @@ class Pica {
                 "Izvēlies darbību",
                 "Sveicināts picērijā!",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                picaImg,
                 darbibas,
                 darbibas[0]
             );
@@ -156,7 +158,9 @@ class Pica {
                 return;
             }
 
-            String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni (asa)", "Veģetārā"};
+            ImageIcon picaImg = new ImageIcon(Main.class.getResource("/resources/pica.png")); // ✅ works statically
+
+            String[] darbibas = {"Margarita", "Salami", "Hawaii", "Peperoni(asa)", "Supreme"};
             String veids = null;
             String izmers, parole, adrese = null, telNr = null;
             int opcija, piegadeOpcija;
@@ -171,20 +175,21 @@ class Pica {
                 "Izvēlies picas veidu:",
                 "Cepam picu...",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                picaImg,
                 darbibas,
                 darbibas[0]);
             if (veids == null){
                 return;
             }
 
+            picaImg = new ImageIcon(Main.class.getResource("/resources/"+veids+".png"));
             darbibas = new String[]{"Liela(+8.40€)", "Vidēja(+6.25€)", "Maza(+5.20€)"};
             izmers = (String) JOptionPane.showInputDialog(
                 null,
                 "Izvēlies picas izmēru:",
                 "Cepam picu...",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                picaImg,
                 darbibas,
                 darbibas[0]);
             if (izmers == null){
@@ -193,9 +198,10 @@ class Pica {
             switch(izmers){
                 case "Liela(+8.40€)":
                     cena += 8.40;
+
                     break;
                 case "Vidēja(+6.25€)":
-                    cena += 6.25;    
+                    cena += 6.25;
                     break;
                 case "Maza(+5.20€)":
                     cena += 5.20;
@@ -271,11 +277,14 @@ class Pica {
                     return;
                 }
 
+                picaImg = new ImageIcon(Main.class.getResource("/resources/kurjers.png"));
                 piegadeOpcija = JOptionPane.showConfirmDialog(
                     null,
                     "Vai vēlies piegādi? (+2.50€)",
                     "Piegādes izvēle",
-                    JOptionPane.YES_NO_OPTION
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    picaImg
                 );
 
                 if (piegadeOpcija == JOptionPane.YES_OPTION) {
