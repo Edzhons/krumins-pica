@@ -34,7 +34,7 @@
     git clone https://github.com/Edzhons/krumins-pica.git
     ```
 2. Atver projektu ar IDE (piemēram, IntelliJ, Eclipse vai VS Code ar Java atbalstu)
-3. Kompilē un palaid `App.java`
+3. Kompilē un palaid `Main.java`
 
 ## 📌 Piezīmes
 
