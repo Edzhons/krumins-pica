@@ -224,18 +224,22 @@ public class Banka {
 
                 String atlikumsStr = null;
                 if (atbilde == JOptionPane.YES_OPTION) {
-                    atlikumsStr = JOptionPane.showInputDialog(null, "Cik vēlies iemaksāt?");
-                    if (atlikumsStr == null) {
-                        return;
-                    }
-                    if (atlikumsStr.isEmpty()){
-                        atlikums = 0.00;
-                    }else{
+                    while(true){
                         try {
-                            atlikums = Double.parseDouble(atlikumsStr);
+                            atlikumsStr = JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?");
+                            if (atlikumsStr == null) {
+                                return;
+                            }else{
+                                atlikums = Double.parseDouble(atlikumsStr);
+                            }
+
+                            if (atlikums <= 0.00) {
+                                JOptionPane.showMessageDialog(null, "Ievadītā summa ir nederīga. Lūdzu, ievadiet pozitīvu skaitli.", "Kļūda", JOptionPane.ERROR_MESSAGE);
+                            }else{
+                                break;
+                            }
                         } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null, "Ievadīts nederīgs skaitlis!", "Kļūda", JOptionPane.ERROR_MESSAGE);
-                            return;
                         }
                     }
                 }else{
