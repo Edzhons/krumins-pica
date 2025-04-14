@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class Banka {
@@ -86,6 +87,7 @@ public class Banka {
 
     // Galvenās metodes
     public static void bankasIzvele() {
+        ImageIcon bankaImg = new ImageIcon(Main.class.getResource("/resources/banka.png"));
         Dati.bankas = new ArrayList<>(nolasaBankasKontus());
             if (Dati.bankas.isEmpty()) {
                 int atbilde = JOptionPane.showConfirmDialog(
@@ -110,7 +112,7 @@ public class Banka {
                 "Izvēlies darbību",
                 "Sveicināts bankā!",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                bankaImg,
                 darbibas,
                 darbibas[0]
             );
@@ -204,8 +206,10 @@ public class Banka {
                 }
             }while(!uzvards.matches("[a-zA-ZāčēģīķļņōŗšūžĀČĒĢĪĶĻŅŌŖŠŪŽ]+"));
             
+            ImageIcon bankaImg = new ImageIcon(Main.class.getResource("/resources/parole.png"));
             do{
-                parole = JOptionPane.showInputDialog(null, "Ievadi paroli: \n(vismaz 5 rakstzīmes,\nsatur lielo burtu,\nsatur speciālo zīmi(!@#$%^&*()_+=-)): ");
+                parole = JOptionPane.showInputDialog(null, "Ievadi paroli: \n(vismaz 5 rakstzīmes,\nsatur lielo burtu,\nsatur speciālo zīmi(!@#$%^&*()_+=-)): ",
+                "Bankas konta izveide", JOptionPane.QUESTION_MESSAGE, bankaImg, null, null).toString();
                 if (parole == null) {
                     return;
                 }
@@ -224,9 +228,11 @@ public class Banka {
 
                 String atlikumsStr = null;
                 if (atbilde == JOptionPane.YES_OPTION) {
+                    bankaImg = new ImageIcon(Main.class.getResource("/resources/nauda.png"));
                     while(true){
                         try {
-                            atlikumsStr = JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?");
+                            atlikumsStr = JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?", "Naudas noguldījums kontā",
+                            JOptionPane.QUESTION_MESSAGE, bankaImg, null, null).toString();
                             if (atlikumsStr == null) {
                                 return;
                             }else{
@@ -334,9 +340,11 @@ public class Banka {
                 
                 if (parole.equals(izveletaisKonts.getParole())){
                     double nauda = 0.00;
+                    ImageIcon bankaImg = new ImageIcon(Main.class.getResource("/resources/nauda.png"));
                     while(true){
                         try {
-                            String naudaStr = JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?");
+                            String naudaStr = JOptionPane.showInputDialog(null, "Cik daudz naudas vēlies noguldīt?",
+                            "Bankas konta noguldījums", JOptionPane.QUESTION_MESSAGE, bankaImg, null, null).toString();
                             if (naudaStr == null) {
                                 return;
                             }else{
